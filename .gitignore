@@ -45,12 +45,19 @@ env/
 *.npy
 *.parquet
 *.pkl
+*.html
+*.pdf
 outputs_*/
 experiments/
 datasets/
 checkpoint/
 *.log
 *.csv
+
+# Build artifacts
+.pdf_build/
+.pdf_qa/
+final_pdfs/
 
 # OS
 .DS_Store
