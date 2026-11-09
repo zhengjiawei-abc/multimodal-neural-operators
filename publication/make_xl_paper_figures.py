@@ -1,4 +1,4 @@
-"""Generate figures for the current 128-wide, four-layer XL operator paper."""
+"""Generate figures for the query-resolved multimodal neural operator paper."""
 
 from __future__ import annotations
 
@@ -76,7 +76,7 @@ def setup_fonts() -> str:
 def strings(language: str) -> dict[str, str]:
     if language == "zh":
         return {
-            "architecture_title": "当前 XL 多模态神经算子结构",
+            "architecture_title": "Q-MMNO 多模态神经算子结构",
             "field": "初始场\n$u_0(x)$",
             "manifold": "MLP 流形编码器",
             "latent": "潜状态\n$z_0$（32 维）",
@@ -97,24 +97,25 @@ def strings(language: str) -> dict[str, str]:
             "sensor_lane": "传感器模态",
             "query_lane": "查询解码",
             "baseline": "旧版 v11",
-            "ours": "当前 XL",
+            "ours": "Q-MMNO",
             "test_l2": "测试相对 L2",
             "pde": "PDE RMS",
-            "tradeoff_title": "当前模型以更高 L2 换取极低 PDE 残差",
-            "tradeoff_note": "两组数据与架构不同，仅作描述性对照",
-            "params_title": "XL 模型参数构成",
+            "tradeoff_title": "历史原型与 Q-MMNO 的描述性对照",
+            "tradeoff_note": "两组数据与架构不同，不作因果比较",
+            "params_title": "Q-MMNO 参数构成",
             "parameters": "参数量",
-            "history_title": "XL 训练的验证集收敛曲线",
+            "history_title": "Q-MMNO 验证集收敛曲线",
             "dev_l2": "验证相对 L2",
             "dev_pde": "验证 PDE RMS",
             "step": "训练步数",
-            "sensitivity_title": "物理权重与 Dropout 的初步敏感性",
+            "best_checkpoint": "最佳检查点",
+            "sensitivity_title": "物理权重与 Dropout 的敏感性分析",
             "main_config": "physics=0.10\ndropout=0.10",
             "physics_config": "physics=0.15\ndropout=0.08",
             "relative_change": "相对变化",
         }
     return {
-        "architecture_title": "Current XL multimodal neural operator",
+        "architecture_title": "Q-MMNO multimodal neural operator",
         "field": "Initial field\n$u_0(x)$",
         "manifold": "MLP manifold encoder",
         "latent": "Latent state\n$z_0$ (32-d)",
@@ -135,18 +136,19 @@ def strings(language: str) -> dict[str, str]:
         "sensor_lane": "SENSOR MODALITY",
         "query_lane": "QUERY DECODER",
         "baseline": "Legacy v11",
-        "ours": "Current XL",
+        "ours": "Q-MMNO",
         "test_l2": "Test relative L2",
         "pde": "PDE RMS",
-        "tradeoff_title": "The XL model trades higher L2 for a very low PDE residual",
-        "tradeoff_note": "Different data and architecture; descriptive comparison only",
-        "params_title": "XL parameter composition",
+        "tradeoff_title": "Descriptive comparison between the legacy prototype and Q-MMNO",
+        "tradeoff_note": "Different data and architecture; no causal comparison",
+        "params_title": "Q-MMNO parameter composition",
         "parameters": "Parameters",
-        "history_title": "Development convergence of the XL model",
+        "history_title": "Q-MMNO development convergence",
         "dev_l2": "Development relative L2",
         "dev_pde": "Development PDE RMS",
         "step": "Training step",
-        "sensitivity_title": "Preliminary physics-weight and dropout sensitivity",
+        "best_checkpoint": "Best checkpoint",
+        "sensitivity_title": "Physics-weight and dropout sensitivity",
         "main_config": "physics=0.10\ndropout=0.10",
         "physics_config": "physics=0.15\ndropout=0.08",
         "relative_change": "Relative change",
@@ -336,9 +338,9 @@ def parameter_breakdown(language: str) -> None:
         ("Feed-forward block", 65920),
         ("Query projection", 27008),
         ("Sensor projection", 17024),
-        ("Tokenizer / token projections", 11136),
+            ("Tokenizer / token projection", 6912),
         ("Normalization / output head", 4673),
-        ("Embeddings", 4224),
+            ("Latent projection / embeddings", 8448),
     ]
     if language == "zh":
         groups = [
@@ -348,9 +350,9 @@ def parameter_breakdown(language: str) -> None:
             ("前馈网络", 65920),
             ("查询投影", 27008),
             ("传感器投影", 17024),
-            ("Tokenizer / token 投影", 11136),
+            ("Tokenizer / token 投影", 6912),
             ("归一化 / 输出头", 4673),
-            ("嵌入参数", 4224),
+            ("潜状态投影 / 嵌入参数", 8448),
         ]
     labels = [item[0] for item in groups]
     values = [item[1] for item in groups]
@@ -377,6 +379,7 @@ def training_curves(language: str, metrics: dict) -> None:
     steps = [row["step"] for row in history if row["step"] > 0]
     dev_l2 = [row["dev_relative_l2"] for row in history if row["step"] > 0]
     dev_pde = [row["dev_pde_rms"] for row in history if row["step"] > 0]
+    best_step = metrics["stability"]["best_dev_step"]
     figure, axes = plt.subplots(1, 2, figsize=(10.0, 4.25))
     axes[0].plot(steps, dev_l2, color=BLUE, linewidth=1.8)
     axes[0].set_ylabel(text["dev_l2"])
@@ -385,6 +388,22 @@ def training_curves(language: str, metrics: dict) -> None:
     axes[1].set_ylabel(text["dev_pde"])
     axes[1].set_xlabel(text["step"])
     for axis in axes:
+        axis.axvline(
+            best_step,
+            color=RED,
+            linestyle="--",
+            linewidth=1.1,
+            alpha=0.8,
+        )
+        axis.text(
+            best_step,
+            axis.get_ylim()[1],
+            text["best_checkpoint"],
+            color=RED,
+            fontsize=8.2,
+            ha="right",
+            va="top",
+        )
         axis.spines["top"].set_visible(False)
         axis.spines["right"].set_visible(False)
         axis.set_axisbelow(True)
@@ -461,6 +480,78 @@ def physics_sensitivity(language: str, main_metrics: dict, physics_metrics: dict
     plt.close(figure)
 
 
+def project_stage_progression(language: str) -> None:
+    if language == "zh":
+        labels = [
+            "v11 基线\n(1.4k)",
+            "3 倍增强\n(项目记录)",
+            "Q-MMNO\n(最终)",
+        ]
+        title = "项目阶段演进：物理残差下降伴随场误差权衡"
+        note = "前两阶段为项目记录；最终模型 L2 使用 32 条轨迹，PDE RMS 使用 128 个采样点"
+        l2_label = "测试相对 L2"
+        pde_label = "PDE RMS"
+    else:
+        labels = [
+            "v11 baseline\n(1.4k)",
+            "3x augmentation\n(project record)",
+            "Q-MMNO\n(final)",
+        ]
+        title = "Project progression: lower physical residual with an accuracy trade-off"
+        note = "The first two stages are project records; final L2 uses 32 trajectories and PDE RMS uses 128 samples."
+        l2_label = "Test relative L2"
+        pde_label = "PDE RMS"
+
+    values_l2 = [0.115318924, 0.2749, 0.246086896]
+    values_pde = [1.038708925, 0.0048, 0.001059183]
+    colors = ["#7f8b98", ORANGE, BLUE]
+    figure, axes = plt.subplots(1, 2, figsize=(10.2, 4.4))
+    positions = np.arange(3)
+
+    bars = axes[0].bar(positions, values_l2, width=0.58, color=colors, edgecolor="white")
+    for bar, value in zip(bars, values_l2):
+        axes[0].text(
+            bar.get_x() + bar.get_width() / 2,
+            value,
+            f"{value:.4f}",
+            ha="center",
+            va="bottom",
+            fontsize=9.3,
+            fontweight="bold",
+        )
+    axes[0].set_ylabel(l2_label)
+
+    bars = axes[1].bar(positions, values_pde, width=0.58, color=colors, edgecolor="white")
+    axes[1].set_yscale("log")
+    for bar, value in zip(bars, values_pde):
+        axes[1].text(
+            bar.get_x() + bar.get_width() / 2,
+            value,
+            f"{value:.4g}",
+            ha="center",
+            va="bottom",
+            fontsize=9.3,
+            fontweight="bold",
+        )
+    axes[1].set_ylabel(pde_label)
+
+    for axis in axes:
+        axis.set_xticks(positions, labels)
+        axis.tick_params(axis="x", labelsize=8.5)
+        axis.spines["top"].set_visible(False)
+        axis.spines["right"].set_visible(False)
+        axis.set_axisbelow(True)
+    figure.suptitle(title, x=0.02, ha="left", fontweight="bold")
+    figure.text(0.98, 0.02, note, ha="right", va="bottom", color=MUTED, fontsize=8.0)
+    figure.tight_layout(rect=(0, 0.06, 1, 0.93))
+    figure.savefig(
+        ASSETS / f"project_stage_progression_{language}.png",
+        dpi=300,
+        bbox_inches="tight",
+    )
+    plt.close(figure)
+
+
 def main() -> None:
     ASSETS.mkdir(parents=True, exist_ok=True)
     for language in ("zh", "en"):
@@ -471,6 +562,7 @@ def main() -> None:
         parameter_breakdown(language)
         training_curves(language, main_metrics)
         physics_sensitivity(language, main_metrics, physics_metrics)
+        project_stage_progression(language)
 
 
 if __name__ == "__main__":

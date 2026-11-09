@@ -91,7 +91,11 @@
       "PowerShell(\\(Get-Item \"C:\\\\Users\\\\郑炜锋\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\51dcc67531253304\\\\a81c54c2-eb2f-44d9-8ef8-1b6ee857b00e\\\\tasks\\\\bbbacgvqb.output\" -ErrorAction SilentlyContinue\\).Length)",
       "PowerShell(\\(Get-Item \"C:\\\\Users\\\\郑炜锋\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\51dcc67531253304\\\\a81c54c2-eb2f-44d9-8ef8-1b6ee857b00e\\\\tasks\\\\b0tzflwqa.output\" -ErrorAction SilentlyContinue\\).Length)",
       "PowerShell(sleep 5; \\(Get-Item \"C:\\\\Users\\\\郑炜锋\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\51dcc67531253304\\\\a81c54c2-eb2f-44d9-8ef8-1b6ee857b00e\\\\tasks\\\\b2xfeoe3y.output\" -ErrorAction SilentlyContinue\\).Length)",
-      "PowerShell(\\(Get-Item \"C:\\\\Users\\\\郑炜锋\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\51dcc67531253304\\\\a81c54c2-eb2f-44d9-8ef8-1b6ee857b00e\\\\tasks\\\\bdyavntb7.output\" -ErrorAction SilentlyContinue\\).Length)"
+      "PowerShell(\\(Get-Item \"C:\\\\Users\\\\郑炜锋\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\51dcc67531253304\\\\a81c54c2-eb2f-44d9-8ef8-1b6ee857b00e\\\\tasks\\\\bdyavntb7.output\" -ErrorAction SilentlyContinue\\).Length)",
+      "PowerShell(Get-Volume | Where-Object {$_.DriveLetter -eq 'C'} | Select-Object DriveLetter, @{Name=\"FreeGB\";Expression={[math]::Round\\($_.SizeRemaining/1GB,2\\)}}, @{Name=\"TotalGB\";Expression={[math]::Round\\($_.Size/1GB,2\\)}})",
+      "PowerShell(cd \"C:\\\\Users\\\\郑炜锋\\\\AppData\\\\Local\\\\Temp\\\\claude\"; Get-ChildItem -Recurse | Where-Object {$_.LastWriteTime -lt \\(Get-Date\\).AddDays\\(-1\\)} | Measure-Object -Property Length -Sum | Select-Object @{Name=\"SizeGB\";Expression={[math]::Round\\($_.Sum/1GB,2\\)}})",
+      "PowerShell(Get-WmiObject Win32_OperatingSystem | Select-Object @{Name=\"FreePhysicalMemoryGB\";Expression={[math]::Round\\($_.FreePhysicalMemory/1MB,2\\)}}, @{Name=\"TotalPhysicalMemoryGB\";Expression={[math]::Round\\($_.TotalVisibleMemorySize/1MB,2\\)}}, @{Name=\"FreeVirtualMemoryGB\";Expression={[math]::Round\\($_.FreeVirtualMemory/1MB,2\\)}}, @{Name=\"TotalVirtualMemoryGB\";Expression={[math]::Round\\($_.TotalVirtualMemorySize/1MB,2\\)}})",
+      "PowerShell([System.GC]::Collect\\(\\); [System.GC]::WaitForPendingFinalizers\\(\\); [System.GC]::Collect\\(\\); Get-WmiObject Win32_OperatingSystem | Select-Object @{Name=\"FreePhysicalMemoryGB\";Expression={[math]::Round\\($_.FreePhysicalMemory/1MB,2\\)}})"
     ],
     "additionalDirectories": [
       "C:\\Users\\郑炜锋\\Desktop\\pinn_hybrid_demo_20261001\\code",
