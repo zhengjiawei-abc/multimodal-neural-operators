@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><base href="file:///C:/Users/%E9%83%91%E7%82%9C%E9%94%8B/Desktop/pinn_hybrid_demo_20261001/">
+<meta charset="utf-8">
+<meta name="author" content="Project author information to be completed">
+<meta name="description" content="Evidence-Audited Multimodal Neural Operators for the Burgers Equation">
+<title>Evidence-Audited Multimodal Neural Operators for the Burgers Equation</title>
+<style>
+@font-face {
+  font-family: "DocumentSans";
+  src: url("file:///C:/Windows/Fonts/NotoSansSC-VF.ttf") format("truetype");
+  font-weight: 100 900;
+}
+@font-face {
+  font-family: "DocumentSerif";
+  src: url("file:///C:/Windows/Fonts/NotoSerifSC-VF.ttf") format("truetype");
+  font-weight: 100 900;
+}
+@page {
+  size: A4;
+  margin: 22mm 18mm 19mm 18mm;
+}
+@page :first {
+  margin: 0;
+}
+* { box-sizing: border-box; }
+html { color-scheme: light; }
+body {
+  margin: 0;
+  color: #263241;
+  background: #fff;
+  font-family: "DocumentSans", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  font-size: 10pt;
+  line-height: 1.72;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+p {
+  margin: 0 0 7.5pt;
+  text-align: justify;
+  orphans: 3;
+  widows: 3;
+}
+strong { color: #172333; font-weight: 700; }
+a { color: #1f5d85; text-decoration: none; }
+ul, ol { margin: 5pt 0 9pt 0; padding-left: 20pt; }
+li { margin: 2.4pt 0; padding-left: 1.5pt; }
+li::marker { color: #b65b35; }
+hr { display: none; }
+
+.cover {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  overflow: hidden;
+  padding: 23mm 22mm 20mm;
+  color: #f4f7fa;
+  background: #162939;
+  break-after: page;
+  display: flex;
+  flex-direction: column;
+}
+.cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 14mm 14mm;
+  pointer-events: none;
+}
+.cover::after {
+  content: "";
+  position: absolute;
+  width: 78mm;
+  height: 7mm;
+  right: 0;
+  top: 57mm;
+  background: #c46a42;
+}
+.cover-header, .cover-main, .cover-footer { position: relative; z-index: 1; }
+.cover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 6mm;
+  border-bottom: 0.35mm solid rgba(255,255,255,.24);
+  color: #bfd0db;
+  font-size: 8pt;
+  letter-spacing: .09em;
+}
+.cover-brand { display: flex; align-items: center; gap: 3mm; font-weight: 700; }
+.cover-mark {
+  display: inline-block;
+  width: 7mm;
+  height: 1.2mm;
+  background: #c46a42;
+}
+.cover-main { margin-top: 58mm; max-width: 166mm; }
+.cover-overline {
+  margin: 0 0 8mm;
+  color: #d8a58c;
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-align: left;
+}
+.cover h1 {
+  margin: 0;
+  max-width: 165mm;
+  color: #fff;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 27pt;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+.cover-subtitle {
+  margin: 7mm 0 0;
+  color: #d6e0e7;
+  font-size: 15pt;
+  font-weight: 350;
+  line-height: 1.45;
+  text-align: left;
+}
+.cover-rule {
+  width: 32mm;
+  height: 1mm;
+  margin-top: 10mm;
+  background: #c46a42;
+}
+.cover-summary {
+  margin-top: 6mm;
+  color: #aebfcb;
+  font-size: 8.4pt;
+  letter-spacing: .08em;
+  text-align: left;
+}
+.cover-footer {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 18mm;
+  align-items: end;
+  padding-top: 7mm;
+  border-top: 0.35mm solid rgba(255,255,255,.24);
+}
+.cover-project span, .cover-meta span {
+  display: block;
+  margin-bottom: 2mm;
+  color: #91a8b7;
+  font-size: 7.5pt;
+  letter-spacing: .08em;
+}
+.cover-project strong { display: block; color: #f4f7fa; font-size: 11pt; line-height: 1.5; }
+.cover-meta { display: flex; gap: 9mm; flex-wrap: wrap; }
+.cover-meta strong { display: block; color: #f4f7fa; font-size: 9.5pt; }
+
+main.content > h1:first-child { display: none; }
+.toc-shell {
+  break-after: page;
+  min-height: 230mm;
+}
+.section-kicker {
+  margin: 0 0 1mm;
+  color: #b65b35;
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-align: left;
+}
+.toc-shell h2 {
+  margin: 0 0 12mm;
+  padding: 0 0 4mm;
+  color: #162939;
+  border: 0;
+  border-bottom: 0.7mm solid #162939;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 24pt;
+  line-height: 1.2;
+}
+.toc-shell ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.toc-shell li {
+  margin: 0;
+  padding: 3mm 0;
+  border-bottom: 0.25mm solid #d9e0e5;
+  font-size: 10.2pt;
+}
+.toc-shell li a { color: #263241; font-weight: 600; }
+.toc-shell li a::before {
+  content: "";
+  display: inline-block;
+  width: 4mm;
+  height: 1.4mm;
+  margin-right: 3mm;
+  background: #c46a42;
+  vertical-align: .1em;
+}
+.toc-shell ul ul { display: none; }
+
+h1, h2, h3, h4 { break-after: avoid; }
+h1 {
+  margin: 0 0 8mm;
+  color: #162939;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 24pt;
+  line-height: 1.3;
+}
+h2 {
+  margin: 12mm 0 6mm;
+  padding: 0 0 4mm;
+  color: #162939;
+  border-bottom: 0.55mm solid #162939;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 18pt;
+  line-height: 1.35;
+}
+h2::before {
+  content: "";
+  display: block;
+  width: 16mm;
+  height: 1mm;
+  margin-bottom: 4mm;
+  background: #c46a42;
+}
+h3 {
+  margin: 8mm 0 3.5mm;
+  color: #1d415a;
+  font-size: 12.8pt;
+  line-height: 1.45;
+}
+h4 {
+  margin: 6mm 0 2.8mm;
+  color: #2a536b;
+  font-size: 11pt;
+  line-height: 1.45;
+}
+h2 + h3, h3 + h4 { margin-top: 0; }
+p:has(+ pre),
+p:has(+ .codehilite),
+p:has(+ table),
+p:has(+ ul),
+p:has(+ ol) { break-after: avoid; }
+
+code {
+  padding: 0.7pt 2.4pt;
+  border: 0.2mm solid #dce3e8;
+  border-radius: 2pt;
+  background: #f3f6f8;
+  color: #9c3f2e;
+  font-family: "Cascadia Code", Consolas, "DocumentSans", monospace;
+  font-size: 8.4pt;
+  overflow-wrap: anywhere;
+}
+pre {
+  margin: 5mm 0 7mm;
+  padding: 4mm 4.5mm;
+  border-left: 1.2mm solid #c46a42;
+  background: #f4f6f7;
+  color: #22313f;
+  font-family: "Cascadia Code", Consolas, "DocumentSans", monospace;
+  font-size: 7.9pt;
+  line-height: 1.52;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  tab-size: 2;
+  break-inside: avoid;
+}
+pre code { padding: 0; border: 0; background: transparent; color: inherit; }
+.codehilite { margin: 5mm 0 7mm; break-inside: avoid; }
+.codehilite pre { margin: 0; }
+
+table {
+  width: 100%;
+  margin: 4mm 0 7mm;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 8.3pt;
+  line-height: 1.48;
+  break-inside: avoid;
+}
+thead { display: table-header-group; }
+tr { break-inside: avoid; }
+th {
+  padding: 2.4mm 2mm;
+  color: #fff;
+  background: #223b4d;
+  border: 0.25mm solid #223b4d;
+  font-weight: 700;
+  text-align: left;
+  vertical-align: middle;
+}
+td {
+  padding: 2.1mm 2mm;
+  border: 0.22mm solid #d5dee4;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+tbody tr:nth-child(even) td { background: #f4f7f8; }
+td strong { color: #a5472f; }
+
+blockquote {
+  margin: 5mm 0;
+  padding: 3.5mm 4.5mm;
+  border-left: 1.3mm solid #c46a42;
+  background: #f7f4f1;
+  color: #475663;
+}
+blockquote p:last-child { margin-bottom: 0; }
+
+img {
+  display: block;
+  max-width: 100%;
+  max-height: 215mm;
+  margin: 6mm auto;
+  object-fit: contain;
+}
+mjx-container { color: #263241; }
+mjx-container[display="true"] {
+  margin: 5mm 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+@media print {
+  a { text-decoration: none; }
+  .content h2, .content h3, .content h4 { -webkit-column-break-after: avoid; }
+}
+pre { line-height: 125%; }
+td.linenos .normal { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f0f0f0; }
+.codehilite .c { color: #60A0B0; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #F00 } /* Error */
+.codehilite .k { color: #007020; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666 } /* Operator */
+.codehilite .ch { color: #60A0B0; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #60A0B0; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #007020 } /* Comment.Preproc */
+.codehilite .cpf { color: #60A0B0; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #60A0B0; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #60A0B0; background-color: #FFF0F0 } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #F00 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #00A000 } /* Generic.Inserted */
+.codehilite .go { color: #888 } /* Generic.Output */
+.codehilite .gp { color: #C65D09; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #04D } /* Generic.Traceback */
+.codehilite .kc { color: #007020; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #007020; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #007020; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #007020 } /* Keyword.Pseudo */
+.codehilite .kr { color: #007020; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #902000 } /* Keyword.Type */
+.codehilite .m { color: #40A070 } /* Literal.Number */
+.codehilite .s { color: #4070A0 } /* Literal.String */
+.codehilite .na { color: #4070A0 } /* Name.Attribute */
+.codehilite .nb { color: #007020 } /* Name.Builtin */
+.codehilite .nc { color: #0E84B5; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #60ADD5 } /* Name.Constant */
+.codehilite .nd { color: #555; font-weight: bold } /* Name.Decorator */
+.codehilite .ni { color: #D55537; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #007020 } /* Name.Exception */
+.codehilite .nf { color: #06287E } /* Name.Function */
+.codehilite .nl { color: #002070; font-weight: bold } /* Name.Label */
+.codehilite .nn { color: #0E84B5; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #062873; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #BB60D5 } /* Name.Variable */
+.codehilite .ow { color: #007020; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #BBB } /* Text.Whitespace */
+.codehilite .mb { color: #40A070 } /* Literal.Number.Bin */
+.codehilite .mf { color: #40A070 } /* Literal.Number.Float */
+.codehilite .mh { color: #40A070 } /* Literal.Number.Hex */
+.codehilite .mi { color: #40A070 } /* Literal.Number.Integer */
+.codehilite .mo { color: #40A070 } /* Literal.Number.Oct */
+.codehilite .sa { color: #4070A0 } /* Literal.String.Affix */
+.codehilite .sb { color: #4070A0 } /* Literal.String.Backtick */
+.codehilite .sc { color: #4070A0 } /* Literal.String.Char */
+.codehilite .dl { color: #4070A0 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #4070A0; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #4070A0 } /* Literal.String.Double */
+.codehilite .se { color: #4070A0; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #4070A0 } /* Literal.String.Heredoc */
+.codehilite .si { color: #70A0D0; font-style: italic } /* Literal.String.Interpol */
+.codehilite .sx { color: #C65D09 } /* Literal.String.Other */
+.codehilite .sr { color: #235388 } /* Literal.String.Regex */
+.codehilite .s1 { color: #4070A0 } /* Literal.String.Single */
+.codehilite .ss { color: #517918 } /* Literal.String.Symbol */
+.codehilite .bp { color: #007020 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #06287E } /* Name.Function.Magic */
+.codehilite .vc { color: #BB60D5 } /* Name.Variable.Class */
+.codehilite .vg { color: #BB60D5 } /* Name.Variable.Global */
+.codehilite .vi { color: #BB60D5 } /* Name.Variable.Instance */
+.codehilite .vm { color: #BB60D5 } /* Name.Variable.Magic */
+.codehilite .il { color: #40A070 } /* Literal.Number.Integer.Long */
+</style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [["\\(", "\\)"], ["$", "$"]],
+    displayMath: [["\\[", "\\]"], ["$$", "$$"]],
+    processEscapes: true
+  },
+  svg: { fontCache: "global" },
+  options: { enableMenu: false, skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"] },
+  startup: { typeset: false }
+};
+window.__mathjaxLoaded = false;
+window.__mathjaxFailed = false;
+</script>
+<script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+  onload="window.__mathjaxLoaded = true"
+  onerror="window.__mathjaxFailed = true"></script>
+</head>
+<body>
+
+    <section class="cover">
+      <header class="cover-header">
+        <div class="cover-brand"><span class="cover-mark"></span><span>MULTIMODAL NEURAL OPERATOR</span></div>
+        <div>DOCUMENT SERIES</div>
+      </header>
+      <main class="cover-main">
+        <p class="cover-overline">RESEARCH AND DELIVERY DOCUMENT</p>
+        <h1>Evidence-Audited Multimodal Neural Operators for the Burgers Equation</h1>
+        <p class="cover-subtitle">Periodic-shift augmentation and sensor-fusion limits</p>
+        <div class="cover-rule"></div>
+        <p class="cover-summary">FUSION STRATEGY / EXPERIMENTAL ANALYSIS / ENGINEERING GUIDANCE</p>
+      </main>
+      <footer class="cover-footer">
+        <div class="cover-project">
+          <span>PROJECT</span>
+          <strong>Multimodal Neural Operator Fusion Study</strong>
+        </div>
+        <div class="cover-meta"><div><span>DATE</span><strong>8 November 2026</strong></div><div><span>AUTHOR</span><strong>Project author information to be completed</strong></div></div>
+      </footer>
+    </section>
+    
+<main class="content">
+<nav class="toc-shell"><p class="section-kicker">CONTENTS</p><h2>Contents</h2><div class="toc">
+<ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#1-introduction">1 Introduction</a></li>
+<li><a href="#2-problem-and-evidence-base">2 Problem and Evidence Base</a></li>
+<li><a href="#3-multimodal-operator-architecture">3 Multimodal Operator Architecture</a></li>
+<li><a href="#4-training-and-evaluation-protocol">4 Training and Evaluation Protocol</a></li>
+<li><a href="#5-audit-of-the-archived-fusion-comparison">5 Audit of the Archived Fusion Comparison</a></li>
+<li><a href="#6-results">6 Results</a></li>
+<li><a href="#7-reproducibility-protocol-for-the-missing-fusion-study">7 Reproducibility Protocol for the Missing Fusion Study</a></li>
+<li><a href="#8-limitations">8 Limitations</a></li>
+<li><a href="#9-conclusion">9 Conclusion</a></li>
+<li><a href="#data-and-code-availability">Data and Code Availability</a></li>
+<li><a href="#references">References</a></li>
+<li><a href="#appendix-a-run-provenance">Appendix A Run Provenance</a></li>
+<li><a href="#appendix-b-minimum-reporting-checklist">Appendix B Minimum Reporting Checklist</a></li>
+</ul>
+</div>
+</nav><h2 id="abstract">Abstract</h2>
+<p>Multimodal neural operators promise to combine dense field observations with sparse sensor measurements while retaining the mesh-independent inference interface of operator learning. This paper studies that promise on the one-dimensional viscous Burgers equation. We describe a composable operator that encodes an initial field into convolutional tokens and a low-dimensional latent state, evolves the latent state in time, and decodes arbitrary space-time queries through cross-attention. Sensor readings are projected into the same token space and concatenated with field tokens before the context encoder. This design is best described as hybrid token fusion: it combines early token concatenation with later query attention rather than implementing a pure early-fusion or pure late-fusion architecture.</p>
+<p>We report two evidence streams. First, an exact periodic-shift augmentation expands 1,408 training trajectories to 4,224 by rolling complete space-time solutions along the periodic spatial direction. Across three paired seeds, the mean test relative L2 error decreases from 0.103485 to 0.097188, a 6.09% relative reduction. All three paired runs improve, and the development error improves in all three runs. The PDE residual does not improve consistently, so the result supports a data-coverage benefit rather than a general physical-consistency gain.</p>
+<p>Second, an audit of two archived runs labelled as cross-attention and pre-fusion finds identical stored model configurations, identical parameter counts, and no independent pre-fusion control in the training entry point. Their numerical outputs differ, but the evidence cannot attribute the difference to fusion strategy. A preliminary eight-sensor trial also underperforms a matched field-only reference. We therefore treat direct sensor fusion as a negative result and specify the alignment objectives, modality dropout, paired-seed design, and architecture fingerprint needed for a valid follow-up. The central conclusion is deliberately narrow: exact symmetry augmentation is supported on the tested Burgers benchmark, while the multimodal fusion benefit remains unproven.</p>
+<p><strong>Keywords</strong>: neural operator; multimodal learning; sensor fusion; Burgers equation; periodic augmentation; reproducibility</p>
+<h2 id="1-introduction">1 Introduction</h2>
+<p>Neural operators learn mappings between function spaces and can approximate PDE solution operators at inference times that are independent of a fixed numerical mesh [1-4]. Most operator benchmarks assume a single, well-defined input field. Engineering systems rarely provide only one observation type. A simulation may supply a dense initial field, while an inspection system supplies a small number of point sensors. A weather model may combine satellite fields with ground stations. A structural monitoring system may combine full-field measurements with a sparse sensor network.</p>
+<p>Combining these observations creates a design question: where should modalities first interact, which parameters should be shared, and how can a model distinguish information from different physical sources? A common narrative compares early feature fusion with late attention fusion and expects one strategy to win on accuracy and the other on physical consistency. That narrative is appealing, but it requires implementations that are independently identifiable, matched training budgets, repeated seeds, and an evaluation protocol that isolates the fusion mechanism from unrelated changes.</p>
+<p>This paper returns to the saved artifacts of the project and asks which claims they support. The result is more constrained than the initial narrative. Two archived runs carry different fusion labels and different outputs, but their stored configurations and parameter signatures do not establish two distinct architectures. At the same time, a later single-modal experiment provides a cleaner positive result: exact periodic shifting improves three paired runs without changing the PDE, the resolution, the model size, or the optimization budget.</p>
+<p>The paper makes four contributions.</p>
+<ol>
+<li>It specifies the implemented multimodal operator as a concrete computation graph, including the hybrid nature of its token fusion path.</li>
+<li>It establishes a reproducible positive result for exact periodic-shift augmentation on a three-seed matched comparison.</li>
+<li>It audits the archived fusion comparison and replaces causal language with descriptive reporting where the artifacts do not support attribution.</li>
+<li>It reports a preliminary negative sensor-fusion result and defines the controls required before a multimodal benefit can be claimed.</li>
+</ol>
+<p>The scope is intentionally limited to a one-dimensional Burgers benchmark. The paper does not claim a general fusion law, a state-of-the-art PDE solver, or an engineering-grade surrogate.</p>
+<h2 id="2-problem-and-evidence-base">2 Problem and Evidence Base</h2>
+<h3 id="21-governing-equation">2.1 Governing equation</h3>
+<p>The benchmark solves the viscous Burgers equation</p>
+<p>\[
+\frac{\partial u}{\partial t}+u\frac{\partial u}{\partial x}
+=\nu\frac{\partial^2 u}{\partial x^2},
+\qquad x\in[0,1),\quad t\in[0,1],
+\]</p>
+<p>with periodic spatial boundary conditions. The stored fields use 256 spatial points and 101 time points. The dataset spans five viscosity values, (\nu\in{0.004,0.006,0.008,0.01,0.012}), and five initial-field families: Fourier, mixture, weak high-frequency, weak spike, and weak step. The learning problem is to approximate the solution operator from an initial field,</p>
+<p>\[
+\mathcal{G}:u_0(x)\mapsto u(x,t),
+\]</p>
+<p>and, in the multimodal setting, from an initial field plus sparse sensor values</p>
+<p>\[
+\mathcal{G}: \left(u_0(x),\,\{(x_i,t_s,u_i)\}_{i=1}^{N}\right)
+\mapsto u(x,t).
+\]</p>
+<p>The dense modality is the initial field. The sparse modality consists of point values sampled at fixed spatial locations and a fixed time (t_s). The current implementation supports (N&gt;0), but the best-supported results in this paper use (N=0). That distinction is central: the operator backbone is mature enough for a matched augmentation study, while the sensor branch remains exploratory.</p>
+<h3 id="22-data-splits">2.2 Data splits</h3>
+<p>All retained comparisons use the same custom Burgers data family. The original curriculum split contains 1,408 training trajectories, 128 development trajectories, and 128 in-distribution test trajectories. The training split is dominated by 512 Fourier and 512 mixture fields, with 128 samples from each of the three weak curriculum families. The test split contains Fourier and mixture fields across the same five viscosity values. Additional out-of-distribution files exist in the data directory, but the paired three-seed comparison in this paper uses the saved in-distribution test split. A claim about OOD behavior is therefore outside the verified result table.</p>
+<table>
+<thead>
+<tr>
+<th>Split</th>
+<th style="text-align: right;">Trajectories</th>
+<th style="text-align: right;">Spatial points</th>
+<th style="text-align: right;">Time points</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Training, original</td>
+<td style="text-align: right;">1,408</td>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">101</td>
+</tr>
+<tr>
+<td>Training, shifted</td>
+<td style="text-align: right;">4,224</td>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">101</td>
+</tr>
+<tr>
+<td>Development</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">101</td>
+</tr>
+<tr>
+<td>In-distribution test</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">101</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-evidence-rule">2.3 Evidence rule</h3>
+<p>The audit follows a simple rule. A numerical claim is retained only when it can be connected to a saved <code>metrics.json</code>, a checkpoint signature, a recorded configuration, or an executable code path. When the connection is indirect, the claim is downgraded. When the artifacts contradict the claim, the claim is removed.</p>
+<p>A directory name is not treated as evidence of an architecture. A path containing <code>prefusion</code>, for example, is a label. It does not prove that the model executed a separate pre-fusion computation graph.</p>
+<h2 id="3-multimodal-operator-architecture">3 Multimodal Operator Architecture</h2>
+<h3 id="31-interface">3.1 Interface</h3>
+<p>The operator maps an initial field and optional sensors to a query value,</p>
+<p>\[
+\hat{u}(x,t)
+=G_\theta\left(u_0,\{(x_i,t_s,u_i)\}_{i=1}^{N}\right)(x,t).
+\]</p>
+<p>The output can be evaluated at arbitrary coordinates after training. The model does not generate a fixed grid as an intermediate requirement. The retained implementation uses a query decoder, with optional grid decoders available in the codebase but not used in the experiments reported here.</p>
+<p><img alt="Figure 1. Multimodal operator backbone" src="publication/assets/architecture_en.png"></p>
+<p>Figure 1. Field encoding, latent evolution, sensor-token fusion, context encoding, and query decoding. The sensor path is active only when <code>--sensor-count</code> is positive.</p>
+<h3 id="32-field-encoder">3.2 Field encoder</h3>
+<p>The initial field is first transformed into a high-pass representation,</p>
+<p>\[
+h(u_0)=u_0-\operatorname{smooth}_{15}(u_0),
+\]</p>
+<p>and the network receives the concatenation ([u_0,0.5h(u_0)]). A two-layer one-dimensional CNN maps this input to local features. Adaptive average pooling produces 32 spatial tokens, which are projected to a model width of 64. The same field is encoded by a convolutional manifold autoencoder into a 32-dimensional latent state (z_0). A learned projection adds manifold information to the token sequence, and a manifold CNN branch injects a second latent-derived token representation.</p>
+<p>The field encoding can be summarized as</p>
+<p>\[
+T_f=\operatorname{CNN}([u_0,0.5h(u_0)]),
+\qquad
+z_0=\operatorname{Enc}_{\mathrm{manifold}}(u_0),
+\qquad
+C_f=\Phi_f(T_f,z_0).
+\]</p>
+<p>The manifold encoder is pretrained before the operator objective is optimized. The retained runs use 1,500 pretraining steps.</p>
+<h3 id="33-latent-temporal-evolution">3.3 Latent temporal evolution</h3>
+<p>The latent state evolves through a learned vector field,</p>
+<p>\[
+\frac{dz}{dt}=v_\theta(z),
+\qquad
+z(t)=z_0+\int_0^t v_\theta(z(s))\,ds.
+\]</p>
+<p>The implementation uses four explicit Euler steps. This is a compact continuous-time prior, not a high-accuracy ODE solver. It gives the decoder a query-dependent latent state without requiring a separate full-grid rollout.</p>
+<h3 id="34-sensor-tokens-and-hybrid-fusion">3.4 Sensor tokens and hybrid fusion</h3>
+<p>For each sensor, the model receives position, sampling time, and value. A two-layer MLP projects the triple to the 64-dimensional model width, and a learned sensor-type embedding is added:</p>
+<p>\[
+T_s^{(i)}=\operatorname{MLP}([x_i,t_s,u_i])+e_{\mathrm{sensor}}.
+\]</p>
+<p>The sensor tokens are concatenated with the field and latent tokens before the context Transformer:</p>
+<p>\[
+C=\Phi_{\mathrm{context}}\left([T_f;T_{z_0};T_s]\right).
+\]</p>
+<p>The context encoder has three layers, four attention heads, and model width 64. The query decoder then attends to (C). This means the implementation is neither the idealized early-fusion design nor the idealized late-fusion design used in the earlier narrative. It performs early token-level concatenation followed by later query-based attention.</p>
+<p>The distinction matters. Calling the model "late fusion" would hide the fact that sensor tokens enter the context encoder. Calling it "early fusion" would hide the decoder attention path. The correct descriptor is hybrid token fusion.</p>
+<h3 id="35-query-decoder">3.5 Query decoder</h3>
+<p>For a query coordinate ((x,t)), the decoder builds</p>
+<p>\[
+q(x,t)=\operatorname{MLP}\left[
+\gamma(x,t),\,z(t),\,u_0^{\mathrm{local}}(x)
+\right],
+\]</p>
+<p>where (\gamma) contains Fourier coordinate features and (u_0^{\mathrm{local}}) contains local field features. The query is refined by cross-attention over the context,</p>
+<p>\[
+\tilde{q}(x,t)=\operatorname{Attn}(q,C,C),
+\qquad
+\hat{u}(x,t)=\operatorname{Head}\left(\operatorname{FFN}(\tilde{q})\right).
+\]</p>
+<p>The context is independent of the query count, so evaluation can process arbitrary space-time coordinates in chunks. The retained evaluation uses 4,096-query chunks.</p>
+<h3 id="36-parameter-scale">3.6 Parameter scale</h3>
+<p>The three-seed field-only model contains 336,546 parameters. Adding eight sensors increases the count to 341,026. The parameter breakdown of the eight-sensor checkpoint is shown below.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th style="text-align: right;">Parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manifold encoder</td>
+<td style="text-align: right;">131,633</td>
+</tr>
+<tr>
+<td>Context encoder</td>
+<td style="text-align: right;">100,416</td>
+</tr>
+<tr>
+<td>Manifold-to-token projection</td>
+<td style="text-align: right;">33,792</td>
+</tr>
+<tr>
+<td>Temporal vector field</td>
+<td style="text-align: right;">8,352</td>
+</tr>
+<tr>
+<td>Query projection</td>
+<td style="text-align: right;">9,408</td>
+</tr>
+<tr>
+<td>Cross-attention</td>
+<td style="text-align: right;">16,640</td>
+</tr>
+<tr>
+<td>Feed-forward decoder</td>
+<td style="text-align: right;">16,576</td>
+</tr>
+<tr>
+<td>CNN tokenizer</td>
+<td style="text-align: right;">2,768</td>
+</tr>
+<tr>
+<td>Field-to-token projection</td>
+<td style="text-align: right;">2,112</td>
+</tr>
+<tr>
+<td>Latent-to-token projection</td>
+<td style="text-align: right;">2,112</td>
+</tr>
+<tr>
+<td>Manifold CNN branch</td>
+<td style="text-align: right;">8,320</td>
+</tr>
+<tr>
+<td>Sensor MLP projection</td>
+<td style="text-align: right;">4,416</td>
+</tr>
+<tr>
+<td>Position and sensor-type embeddings</td>
+<td style="text-align: right;">2,112</td>
+</tr>
+<tr>
+<td>Output head and normalization</td>
+<td style="text-align: right;">2,369</td>
+</tr>
+<tr>
+<td>Total</td>
+<td style="text-align: right;">341,026</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-training-and-evaluation-protocol">4 Training and Evaluation Protocol</h2>
+<h3 id="41-exact-periodic-shift-augmentation">4.1 Exact periodic-shift augmentation</h3>
+<p>The spatial domain is periodic. For any exact solution (u(x,t)), the translated field</p>
+<p>\[
+u_\delta(x,t)=u(x-\delta,t)
+\]</p>
+<p>is also an exact solution with the same equation, boundary conditions, and viscosity. The augmentation therefore changes positional coverage without changing the physics.</p>
+<p>The generator starts from 1,408 trajectories. It creates two additional copies of each trajectory and rolls the full space-time field by a random integer offset in ({1,\ldots,255}). This gives three copies per trajectory and 4,224 training samples. The random generator is seeded, and the augmentation metadata records the shift and copy index.</p>
+<p>This operation is stronger evidence than arbitrary amplitude scaling or spectral perturbation because it cannot create a non-solution. It remains limited to periodic problems.</p>
+<h3 id="42-objective">4.2 Objective</h3>
+<p>The training objective contains a data loss at sampled space-time points, an initial-condition loss, a periodic-boundary loss, and an optional PDE residual term. The retained core runs use</p>
+<p>\[
+\mathcal{L}
+=\mathcal{L}_{\mathrm{data}}
++\mathcal{L}_{\mathrm{IC}}
++\mathcal{L}_{\mathrm{BC}}
++\lambda_{\mathrm{PDE}}\mathcal{L}_{\mathrm{PDE}},
+\qquad
+\lambda_{\mathrm{PDE}}=0.
+\]</p>
+<p>The PDE term is disabled in the optimization objective of the retained runs. The validation score uses a nonzero diagnostic weight,</p>
+<p>\[
+s_{\mathrm{dev}}
+=L_2^{\mathrm{dev}}
++0.1\,\mathrm{PDE}_{\mathrm{RMS}}^{\mathrm{dev}}.
+\]</p>
+<p>Loss balancing is enabled for the active terms. The residual is evaluated with a nominal viscosity of 0.01, while the data contain multiple viscosity values. Because the PDE term is inactive during optimization, this does not alter the training objective, but it further limits the residual to a coarse project-internal diagnostic. The setup is better described as a data-driven operator with physical diagnostics than as a fully physics-informed optimizer.</p>
+<h3 id="43-optimization">4.3 Optimization</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th style="text-align: right;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Preset</td>
+<td style="text-align: right;">wide</td>
+</tr>
+<tr>
+<td>Training samples</td>
+<td style="text-align: right;">4,224</td>
+</tr>
+<tr>
+<td>Steps</td>
+<td style="text-align: right;">24,000</td>
+</tr>
+<tr>
+<td>Batch size</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr>
+<td>Learning rate</td>
+<td style="text-align: right;">1e-3</td>
+</tr>
+<tr>
+<td>Warmup</td>
+<td style="text-align: right;">200 steps</td>
+</tr>
+<tr>
+<td>Schedule</td>
+<td style="text-align: right;">cosine decay to 2%</td>
+</tr>
+<tr>
+<td>Dropout</td>
+<td style="text-align: right;">0.1</td>
+</tr>
+<tr>
+<td>Gradient clip</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr>
+<td>Loss balancing</td>
+<td style="text-align: right;">enabled</td>
+</tr>
+<tr>
+<td>Physics weight</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+<tr>
+<td>Validation physics weight</td>
+<td style="text-align: right;">0.1</td>
+</tr>
+<tr>
+<td>Seeds</td>
+<td style="text-align: right;">11, 7, 23</td>
+</tr>
+</tbody>
+</table>
+<p>The best development checkpoint is restored before test evaluation. The retained best steps are 22,000, 20,000, and 18,000 for seeds 11, 7, and 23 respectively.</p>
+<h3 id="44-metrics">4.4 Metrics</h3>
+<p>Relative L2 error is computed over the full (256\times101) field and averaged over test trajectories:</p>
+<p>\[
+L_2^{\mathrm{rel}}
+=\frac{1}{M}\sum_{m=1}^{M}
+\frac{\lVert\hat{u}_m-u_m\rVert_2}
+{\lVert u_m\rVert_2}.
+\]</p>
+<p>The PDE residual is evaluated on 128 sampled space-time points using automatic differentiation and reported as a root-mean-square value. Two details limit interpretation. The query coordinates are sampled at evaluation time, and the residual uses the nominal viscosity 0.01 for a dataset that spans multiple viscosities. The residual is therefore a coarse project-internal diagnostic, not a standardized cross-paper benchmark. Future comparisons should fix and save the evaluation query set and use the sample-specific viscosity.</p>
+<h2 id="5-audit-of-the-archived-fusion-comparison">5 Audit of the Archived Fusion Comparison</h2>
+<h3 id="51-stored-configurations">5.1 Stored configurations</h3>
+<p>The audit examines two run directories:</p>
+<ul>
+<li><code>experiments/outputs_burgers_dataset/custom_v11_multimodal_sensors8_24k</code></li>
+<li><code>experiments/outputs_burgers_dataset/custom_v12_multimodal_prefusion_24k</code></li>
+</ul>
+<p>Both stored configurations contain eight sensors at (t_s=0.5), model width 64, 32 context tokens, four attention heads, three Transformer layers, batch size 32, 24,000 steps, learning rate (10^{-3}), training physics weight 0.0, validation physics weight 0.1, loss balancing enabled, and seed 11. A field-by-field comparison of the two saved configuration objects finds no difference.</p>
+<p>Both checkpoints contain 341,026 parameters and 129 state-dict entries with matching tensor shapes. The weights themselves differ, which is compatible with two training runs of the same computation graph under different initialization or data order. The parameter signature does not establish two fusion mechanisms.</p>
+<h3 id="52-descriptive-measurements">5.2 Descriptive measurements</h3>
+<table>
+<thead>
+<tr>
+<th>Measurement</th>
+<th style="text-align: right;">Run labelled cross-attention</th>
+<th style="text-align: right;">Run labelled pre-fusion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test relative L2</td>
+<td style="text-align: right;">0.115319</td>
+<td style="text-align: right;">0.114495</td>
+</tr>
+<tr>
+<td>Test PDE RMS</td>
+<td style="text-align: right;">1.038709</td>
+<td style="text-align: right;">1.795859</td>
+</tr>
+<tr>
+<td>Development relative L2</td>
+<td style="text-align: right;">0.128933</td>
+<td style="text-align: right;">0.130875</td>
+</tr>
+<tr>
+<td>Training relative L2</td>
+<td style="text-align: right;">0.118823</td>
+<td style="text-align: right;">0.121072</td>
+</tr>
+<tr>
+<td>Training time (s)</td>
+<td style="text-align: right;">1,597.907</td>
+<td style="text-align: right;">1,374.561</td>
+</tr>
+<tr>
+<td>Parameters</td>
+<td style="text-align: right;">341,026</td>
+<td style="text-align: right;">341,026</td>
+</tr>
+</tbody>
+</table>
+<p>The recorded test L2 difference is 0.000824, or 0.714% relative to the cross-attention-labelled run. The recorded PDE difference is 0.757150, with the pre-fusion-labelled run higher by 72.89%. The training time differs by 223.346 seconds, or 13.98% of the longer run.</p>
+<p>These are descriptive differences between two archived executions. They are not estimates of a fusion effect. No repeated seed, confidence interval, or independent pre-fusion implementation is retained. Wall-clock time is also sensitive to GPU contention and host load.</p>
+<h3 id="53-claims-removed-or-downgraded">5.3 Claims removed or downgraded</h3>
+<table>
+<thead>
+<tr>
+<th>Earlier claim</th>
+<th>Status in this paper</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Two fusion mechanisms were compared under controlled conditions</td>
+<td>Downgraded</td>
+<td>No independent pre-fusion control in the current entry point</td>
+</tr>
+<tr>
+<td>Pre-fusion is 0.71% better</td>
+<td>Descriptive only</td>
+<td>One run per label and no causal separation</td>
+</tr>
+<tr>
+<td>Cross-attention is 42% better on PDE residual</td>
+<td>Descriptive only</td>
+<td>Different metric value, unresolved implementation attribution</td>
+</tr>
+<tr>
+<td>Physics weight was 0.1 during training</td>
+<td>Removed</td>
+<td>Stored training value is 0.0; 0.1 is the validation weight</td>
+</tr>
+<tr>
+<td>Learning rate was 3e-3</td>
+<td>Removed</td>
+<td>Stored value is 1e-3</td>
+</tr>
+<tr>
+<td>Different fusion paths have different parameter counts</td>
+<td>Removed</td>
+<td>Both checkpoints contain 341,026 parameters and matching signatures</td>
+</tr>
+</tbody>
+</table>
+<p>The audit does not imply that fusion strategy is unimportant. It shows that the archived artifacts cannot identify the strategy effect. A future comparison needs an explicit strategy switch, a saved architecture manifest, matched budgets, and repeated seeds.</p>
+<h2 id="6-results">6 Results</h2>
+<h3 id="61-matched-periodic-shift-experiment">6.1 Matched periodic-shift experiment</h3>
+<p>The matched comparison keeps the model, data source, optimization budget, and evaluation split fixed. The only intended change is the training set: 1,408 original trajectories versus 4,224 trajectories produced by two exact shift copies.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Seed</th>
+<th style="text-align: right;">Original test L2</th>
+<th style="text-align: right;">Shifted test L2</th>
+<th style="text-align: right;">Absolute change</th>
+<th style="text-align: right;">Relative change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0.097000</td>
+<td style="text-align: right;">0.090097</td>
+<td style="text-align: right;">-0.006903</td>
+<td style="text-align: right;">-7.12%</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.102857</td>
+<td style="text-align: right;">0.095846</td>
+<td style="text-align: right;">-0.007011</td>
+<td style="text-align: right;">-6.82%</td>
+</tr>
+<tr>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">0.110597</td>
+<td style="text-align: right;">0.105622</td>
+<td style="text-align: right;">-0.004975</td>
+<td style="text-align: right;">-4.50%</td>
+</tr>
+<tr>
+<td style="text-align: right;">Mean</td>
+<td style="text-align: right;">0.103485</td>
+<td style="text-align: right;">0.097188</td>
+<td style="text-align: right;">-0.006296</td>
+<td style="text-align: right;">-6.09%</td>
+</tr>
+<tr>
+<td style="text-align: right;">Standard deviation</td>
+<td style="text-align: right;">0.006820</td>
+<td style="text-align: right;">0.007849</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+</tr>
+</tbody>
+</table>
+<p>All three paired runs improve. The development relative L2 also improves for all three seeds:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Seed</th>
+<th style="text-align: right;">Original dev L2</th>
+<th style="text-align: right;">Shifted dev L2</th>
+<th style="text-align: right;">Relative change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0.109650</td>
+<td style="text-align: right;">0.104754</td>
+<td style="text-align: right;">-4.47%</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.119245</td>
+<td style="text-align: right;">0.109762</td>
+<td style="text-align: right;">-7.95%</td>
+</tr>
+<tr>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">0.126335</td>
+<td style="text-align: right;">0.114474</td>
+<td style="text-align: right;">-9.39%</td>
+</tr>
+</tbody>
+</table>
+<p>The mean test improvement is 6.09%, but the sample contains three seeds. The result is evidence of a repeatable effect on this benchmark, not a universal augmentation law.</p>
+<h3 id="62-pde-residual-is-not-a-consistent-win">6.2 PDE residual is not a consistent win</h3>
+<p>The shifted runs do not improve the PDE residual uniformly:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Seed</th>
+<th style="text-align: right;">Original test PDE RMS</th>
+<th style="text-align: right;">Shifted test PDE RMS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0.838240</td>
+<td style="text-align: right;">0.855308</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">1.354726</td>
+<td style="text-align: right;">1.738279</td>
+</tr>
+<tr>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">1.524887</td>
+<td style="text-align: right;">1.471190</td>
+</tr>
+<tr>
+<td style="text-align: right;">Mean</td>
+<td style="text-align: right;">1.239284</td>
+<td style="text-align: right;">1.354926</td>
+</tr>
+</tbody>
+</table>
+<p>The mean residual increases by about 9.3%, while the L2 error improves. This is a useful negative observation. Exact shift augmentation improves positional coverage and field accuracy, but it does not guarantee a lower sampled residual under the current diagnostic.</p>
+<p>The discrepancy can arise from several sources: the validation uses the PDE term only as a diagnostic, the residual is sampled at random coordinates, and the checkpoint is selected by a combined development score. The result should not be framed as proof that augmentation improves physical consistency.</p>
+<h3 id="63-preliminary-sensor-fusion-result">6.3 Preliminary sensor-fusion result</h3>
+<p>A single seed-11 comparison adds eight sensors at (t_s=0.5) to the same 1,408-trajectory training recipe. It increases the parameter count from 336,546 to 341,026.</p>
+<table>
+<thead>
+<tr>
+<th>Seed 11</th>
+<th style="text-align: right;">Field only</th>
+<th style="text-align: right;">Eight sensors</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test relative L2</td>
+<td style="text-align: right;">0.097000</td>
+<td style="text-align: right;">0.115319</td>
+</tr>
+<tr>
+<td>Test PDE RMS</td>
+<td style="text-align: right;">0.838240</td>
+<td style="text-align: right;">1.038709</td>
+</tr>
+<tr>
+<td>Parameters</td>
+<td style="text-align: right;">336,546</td>
+<td style="text-align: right;">341,026</td>
+</tr>
+</tbody>
+</table>
+<p>The sensor run is worse on both recorded metrics. This is a preliminary negative result, not a controlled fusion conclusion: it has one seed, the sensor run carries additional parameters, and the sensor loss does not include a cross-modal alignment term. The result nevertheless argues against the assumption that adding informative measurements automatically improves the operator.</p>
+<p>One plausible explanation is that the sensor branch learns a shortcut based on fixed locations or the single sampling time. The field path already contains the initial condition, so the sensor token can be useful only if the optimization aligns it with the predictive task. Concatenation alone does not create that alignment.</p>
+<h3 id="64-training-behavior">6.4 Training behavior</h3>
+<p>The representative shifted run reaches its best dev score at step 22,000. Its test prediction is shown below.</p>
+<p><img alt="Figure 2. Representative test prediction" src="experiments/outputs_burgers_dataset/custom_v13_shift3_24k/test_prediction.png"></p>
+<p>Figure 2. Representative test prediction for the shifted, field-only model with seed 11.</p>
+<p><img alt="Figure 3. Training and validation curves" src="experiments/outputs_burgers_dataset/custom_v13_shift3_24k/training_curve.png"></p>
+<p>Figure 3. Training history for the representative shifted run.</p>
+<p>The three shifted runs complete 24,000 steps and select best checkpoints at 22,000, 20,000, and 18,000. The field-only model therefore remains reasonably stable over the scheduled budget, but the final training state is not always the best test state.</p>
+<h2 id="7-reproducibility-protocol-for-the-missing-fusion-study">7 Reproducibility Protocol for the Missing Fusion Study</h2>
+<h3 id="71-narrow-research-question">7.1 Narrow research question</h3>
+<p>The next experiment should test a falsifiable question:</p>
+<blockquote>
+<p>Under matched data, parameter budget, optimization budget, evaluation queries, and checkpoint rule, does a separately implemented pre-fusion model differ from the current hybrid token-fusion model in joint prediction error and PDE residual?</p>
+</blockquote>
+<p>The question should not assume a winner. A result with overlapping uncertainty is scientifically useful.</p>
+<h3 id="72-required-implementations">7.2 Required implementations</h3>
+<p>At least four systems should be compared:</p>
+<ol>
+<li>Field-only baseline.</li>
+<li>Early feature fusion with a shared joint encoder.</li>
+<li>Representation-level attention fusion with modality-specific encoders.</li>
+<li>The current hybrid token-fusion implementation.</li>
+</ol>
+<p>Each implementation needs a unit-tested forward path. The test suite should verify token counts, tensor shapes, gradient flow, and the absence of sensor information in the field-only branch.</p>
+<h3 id="73-architecture-fingerprint">7.3 Architecture fingerprint</h3>
+<p>Every run should save a manifest with:</p>
+<ul>
+<li>fusion mode and implementation identifier;</li>
+<li>module class list;</li>
+<li>parameter count;</li>
+<li>hash of parameter shapes;</li>
+<li>source hash or Git commit;</li>
+<li>exact training objective and realized loss-weight schedule;</li>
+<li>data split hashes;</li>
+<li>checkpoint selection rule;</li>
+<li>evaluation query seed.</li>
+</ul>
+<p>A directory name alone is insufficient provenance.</p>
+<h3 id="74-experimental-matrix">7.4 Experimental matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Minimum setting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sensor count</td>
+<td>0, 4, 8, 16</td>
+</tr>
+<tr>
+<td>Sensor time</td>
+<td>0.2, 0.5, 0.8</td>
+</tr>
+<tr>
+<td>Seeds</td>
+<td>at least 5 paired seeds</td>
+</tr>
+<tr>
+<td>Budget</td>
+<td>matched steps and a separate matched wall-clock arm</td>
+</tr>
+<tr>
+<td>Loss</td>
+<td>fixed primary weight plus a documented sensitivity study</td>
+</tr>
+<tr>
+<td>Metrics</td>
+<td>relative L2, fixed-query PDE RMS, per-time error, spectral error</td>
+</tr>
+<tr>
+<td>Reporting</td>
+<td>mean, standard deviation, paired differences, bootstrap intervals</td>
+</tr>
+</tbody>
+</table>
+<p>The sensor matrix should be run only after the implementation fingerprint and field-only controls pass.</p>
+<h3 id="75-multimodal-alignment-objective">7.5 Multimodal alignment objective</h3>
+<p>Direct concatenation is not enough. A minimally plausible alignment objective is</p>
+<p>\[
+\mathcal{L}_{\mathrm{align}}
+=\sum_i\lVert\hat{u}(x_i,t_s)-u_i\rVert^2
++\lVert\hat{u}_{\mathrm{field+sensor}}
+-\hat{u}_{\mathrm{field-only}}\rVert^2.
+\]</p>
+<p>The first term requires the field prediction to explain the sensor readings. The second encourages consistent predictions in regions where both paths are expected to agree. Modality dropout should be used during training so the field-only path remains a valid fallback.</p>
+<h2 id="8-limitations">8 Limitations</h2>
+<p>This study has six main limitations.</p>
+<p>First, it evaluates one PDE, one spatial resolution, and one boundary condition. The data span five viscosities rather than a single coefficient. Periodic shifts are exact only for periodic fields and cannot be transferred directly to non-periodic domains.</p>
+<p>Second, the positive augmentation result uses three paired seeds. This is enough to show a repeated improvement, not enough to estimate a population-level effect or justify a small-effect significance claim.</p>
+<p>Third, the PDE residual is a random-query diagnostic evaluated with a nominal viscosity rather than the sample-specific value. Its mean changed in the opposite direction from the field error. Future evaluations should save a fixed query set, use the correct per-sample coefficient, and report the residual definition and normalization.</p>
+<p>Fourth, the sensor branch was tested with one seed and no alignment loss. The negative result is informative for engineering caution but is not a definitive fusion comparison.</p>
+<p>Fifth, the archived fusion runs lack an independent pre-fusion implementation and source commit. The numerical differences remain useful as historical observations, but not as causal evidence.</p>
+<p>Sixth, the model is not an engineering replacement for a numerical solver. The operator has about 337 thousand parameters and trains for roughly 47 to 52 minutes on the retained hardware. It is a research prototype for controlled operator-learning experiments.</p>
+<h2 id="9-conclusion">9 Conclusion</h2>
+<p>This paper separates what the multimodal operator project has demonstrated from what it has only suggested.</p>
+<p>The demonstrated result is an exact periodic-shift augmentation effect. On three paired runs, mean test relative L2 improves by 6.09%, with all three seeds improving. The change preserves the PDE exactly and isolates the effect of positional coverage. The PDE residual does not improve consistently, so the result should be described as an accuracy and coverage benefit.</p>
+<p>The multimodal claim is not yet demonstrated. Direct sensor tokens increase error in the retained trial, and the archived cross-attention versus pre-fusion comparison cannot be attributed because the stored configurations and parameter signatures do not identify two separate mechanisms. The appropriate next step is not another architectural label. It is an executable comparison with saved fingerprints, paired seeds, fixed evaluation queries, and a cross-modal alignment objective.</p>
+<p>The broader lesson is simple. Exact symmetries can provide reliable data augmentation when the governing physics is known. Merely adding another modality does not guarantee a better operator. In multimodal scientific machine learning, the evidence for interaction must be as explicit as the architecture diagram.</p>
+<h2 id="data-and-code-availability">Data and Code Availability</h2>
+<p>The manuscript uses retained artifacts in the project workspace:</p>
+<ul>
+<li><code>code/demo_burgers_dataset.py</code></li>
+<li><code>code/make_custom_shift_augment.py</code></li>
+<li><code>datasets/burgers_custom_v1/</code></li>
+<li><code>experiments/outputs_burgers_dataset/custom_v7_hp05_24k*</code></li>
+<li><code>experiments/outputs_burgers_dataset/custom_v13_shift3_24k*</code></li>
+<li><code>experiments/outputs_burgers_dataset/custom_v11_multimodal_sensors8_24k/</code></li>
+<li><code>experiments/outputs_burgers_dataset/custom_v12_multimodal_prefusion_24k/</code></li>
+</ul>
+<p>A publication release should include checksums for the data files, all retained metrics, the training command lines, the environment lock file, and the architecture manifests.</p>
+<h2 id="references">References</h2>
+<p>[1] Z. Li, N. Kovachki, K. Azizzadenesheli, B. Liu, K. Bhattacharya, A. Stuart, and A. Anandkumar. Fourier Neural Operator for Parametric Partial Differential Equations. International Conference on Learning Representations, 2021.</p>
+<p>[2] L. Lu, P. Jin, G. Pang, Z. Zhang, and G. E. Karniadakis. Learning Nonlinear Operators via DeepONet Based on the Universal Approximation Theorem of Operators. Nature Machine Intelligence, 3:218-229, 2021.</p>
+<p>[3] N. Kovachki, Z. Li, B. Liu, K. Azizzadenesheli, K. Bhattacharya, A. Stuart, and A. Anandkumar. Neural Operator: Learning Maps Between Function Spaces with Applications to PDEs. Journal of Machine Learning Research, 24(89):1-97, 2023.</p>
+<p>[4] M. Takamoto, T. Praditia, R. Leiteritz, D. MacKinlay, F. Alesiani, D. Pfluger, and M. Niepert. PDEBench: An Extensive Benchmark for Scientific Machine Learning. NeurIPS Datasets and Benchmarks Track, 2022.</p>
+<p>[5] M. Raissi, P. Perdikaris, and G. E. Karniadakis. Physics-Informed Neural Networks: A Deep Learning Framework for Solving Forward and Inverse Problems Involving Nonlinear Partial Differential Equations. Journal of Computational Physics, 378:686-707, 2019.</p>
+<p>[6] S. Wang, H. Wang, and P. Perdikaris. Learning the Solution Operator of Parametric Partial Differential Equations with Physics-Informed DeepONets. Science Advances, 7(40):eabi8605, 2021.</p>
+<p>[7] A. Baltrušaitis, C. Ahuja, and L.-P. Morency. Multimodal Machine Learning: A Survey and Taxonomy. IEEE Transactions on Pattern Analysis and Machine Intelligence, 41(2):423-443, 2019.</p>
+<p>[8] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, L. Kaiser, and I. Polosukhin. Attention Is All You Need. Advances in Neural Information Processing Systems, 2017.</p>
+<p>[9] A. Krishnapriyan, A. Gholami, S. Zhe, R. Kirby, and M. W. Mahoney. Characterizing Possible Failure Modes in Physics-Informed Neural Networks. Advances in Neural Information Processing Systems, 2021.</p>
+<p>[10] J. Pineau, P. Vincent-Lamarre, K. Sinha, V. Lariviere, A. Beygelzimer, F. d'Alche-Buc, E. Fox, and H. Larochelle. Improving Reproducibility in Machine Learning Research. Journal of Machine Learning Research, 22(164):1-20, 2021.</p>
+<p>[11] B. Efron and R. J. Tibshirani. An Introduction to the Bootstrap. Chapman and Hall/CRC, 1993.</p>
+<h2 id="appendix-a-run-provenance">Appendix A Run Provenance</h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Directory</th>
+<th style="text-align: right;">Seed</th>
+<th style="text-align: right;">Train samples</th>
+<th style="text-align: right;">Parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Original augmentation control</td>
+<td><code>custom_v7_hp05_24k</code></td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">1,408</td>
+<td style="text-align: right;">336,546</td>
+</tr>
+<tr>
+<td>Original augmentation control</td>
+<td><code>custom_v7_hp05_24k_seed7</code></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">1,408</td>
+<td style="text-align: right;">336,546</td>
+</tr>
+<tr>
+<td>Original augmentation control</td>
+<td><code>custom_v7_hp05_24k_seed23</code></td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">1,408</td>
+<td style="text-align: right;">336,546</td>
+</tr>
+<tr>
+<td>Periodic-shift run</td>
+<td><code>custom_v13_shift3_24k</code></td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">4,224</td>
+<td style="text-align: right;">336,546</td>
+</tr>
+<tr>
+<td>Periodic-shift run</td>
+<td><code>custom_v13_shift3_24k_seed7</code></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">4,224</td>
+<td style="text-align: right;">336,546</td>
+</tr>
+<tr>
+<td>Periodic-shift run</td>
+<td><code>custom_v13_shift3_24k_seed23</code></td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">4,224</td>
+<td style="text-align: right;">336,546</td>
+</tr>
+<tr>
+<td>Eight-sensor trial</td>
+<td><code>custom_v11_multimodal_sensors8_24k</code></td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">1,408</td>
+<td style="text-align: right;">341,026</td>
+</tr>
+<tr>
+<td>Archived fusion label</td>
+<td><code>custom_v12_multimodal_prefusion_24k</code></td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">1,408</td>
+<td style="text-align: right;">341,026</td>
+</tr>
+</tbody>
+</table>
+<h2 id="appendix-b-minimum-reporting-checklist">Appendix B Minimum Reporting Checklist</h2>
+<ul>
+<li>☐ Fusion mode and implementation identifier recorded in every run</li>
+<li>☐ Architecture manifest and parameter-shape hash saved</li>
+<li>☐ Source commit or code hash retained</li>
+<li>☐ Exact training objective and realized loss schedule logged</li>
+<li>☐ Data split hashes retained</li>
+<li>☐ Checkpoint-selection rule applied consistently</li>
+<li>☐ Fixed evaluation query set saved for PDE diagnostics</li>
+<li>☐ At least five paired seeds for comparative claims</li>
+<li>☐ Mean, standard deviation, and paired uncertainty reported</li>
+<li>☐ Failed and non-finite runs included in the analysis</li>
+<li>☐ Field-only baseline included</li>
+<li>☐ Negative and inconclusive results reported</li>
+</ul>
+</main>
+</body>
+</html>

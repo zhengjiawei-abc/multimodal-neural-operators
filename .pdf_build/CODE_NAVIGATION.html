@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="多模态神经算子项目">
+<meta name="description" content="多模态神经算子代码导航">
+<title>多模态神经算子代码导航</title>
+<base href="file:///C:/Users/%E9%83%91%E7%82%9C%E9%94%8B/Desktop/pinn_hybrid_demo_20261001/">
+<style>
+@font-face {
+  font-family: "DocumentSans";
+  src: url("file:///C:/Windows/Fonts/NotoSansSC-VF.ttf") format("truetype");
+  font-weight: 100 900;
+}
+@font-face {
+  font-family: "DocumentSerif";
+  src: url("file:///C:/Windows/Fonts/NotoSerifSC-VF.ttf") format("truetype");
+  font-weight: 100 900;
+}
+@page { size: A4; margin: 20mm 17mm 18mm 17mm; }
+@page :first { margin: 0; }
+* { box-sizing: border-box; }
+html { color-scheme: light; }
+body {
+  margin: 0;
+  color: #263241;
+  background: #fff;
+  font-family: "DocumentSans", "Microsoft YaHei", sans-serif;
+  font-size: 10.2pt;
+  line-height: 1.72;
+}
+p { margin: 0 0 7pt; text-align: justify; orphans: 3; widows: 3; }
+strong { color: #172333; font-weight: 700; }
+a { color: #1f5d85; text-decoration: none; }
+ul, ol { margin: 5pt 0 9pt; padding-left: 20pt; }
+li { margin: 2.5pt 0; }
+hr { display: none; }
+.cover {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  padding: 24mm 22mm 20mm;
+  overflow: hidden;
+  color: #f4f7fa;
+  background: #162939;
+  break-after: page;
+  display: flex;
+  flex-direction: column;
+}
+.cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 14mm 14mm;
+}
+.cover::after {
+  content: "";
+  position: absolute;
+  width: 78mm;
+  height: 7mm;
+  right: 0;
+  top: 57mm;
+  background: #c46a42;
+}
+.cover-header, .cover-main, .cover-footer { position: relative; z-index: 1; }
+.cover-header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 6mm;
+  border-bottom: .35mm solid rgba(255,255,255,.24);
+  color: #bfd0db;
+  font-size: 8pt;
+  letter-spacing: .09em;
+}
+.cover-main { margin-top: 62mm; max-width: 165mm; }
+.cover-overline {
+  margin: 0 0 8mm;
+  color: #d8a58c;
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-align: left;
+}
+.cover h1 {
+  margin: 0;
+  color: #fff;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 29pt;
+  font-weight: 650;
+  line-height: 1.32;
+}
+.cover-subtitle {
+  margin: 7mm 0 0;
+  color: #d6e0e7;
+  font-size: 16pt;
+  font-weight: 350;
+  text-align: left;
+}
+.cover-rule {
+  width: 32mm;
+  height: 1mm;
+  margin-top: 10mm;
+  background: #c46a42;
+}
+.cover-summary {
+  margin-top: 6mm;
+  color: #aebfcb;
+  font-size: 8.8pt;
+  letter-spacing: .08em;
+  text-align: left;
+}
+.cover-footer {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 18mm;
+  align-items: end;
+  padding-top: 7mm;
+  border-top: .35mm solid rgba(255,255,255,.24);
+}
+.cover-project span, .cover-meta span {
+  display: block;
+  margin-bottom: 2mm;
+  color: #91a8b7;
+  font-size: 7.5pt;
+  letter-spacing: .08em;
+}
+.cover-project strong, .cover-meta strong {
+  display: block;
+  color: #f4f7fa;
+  font-size: 10pt;
+}
+.toc-shell { min-height: 240mm; break-after: page; }
+.toc-shell h2 {
+  margin: 0 0 12mm;
+  padding-bottom: 4mm;
+  border-bottom: .7mm solid #162939;
+  font-size: 24pt;
+}
+.toc-shell ul { list-style: none; margin: 0; padding: 0; }
+.toc-shell li {
+  padding: 3mm 0;
+  border-bottom: .25mm solid #d9e0e5;
+}
+.toc-shell ul ul { display: none; }
+.toc-shell a { color: #263241; font-weight: 600; }
+.section-kicker {
+  margin: 0 0 1mm;
+  color: #b65b35;
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-align: left;
+}
+h1, h2, h3, h4 { break-after: avoid; }
+h1 {
+  margin: 0 0 8mm;
+  color: #162939;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 23pt;
+  line-height: 1.3;
+}
+h2 {
+  margin: 11mm 0 5mm;
+  padding-bottom: 3mm;
+  color: #162939;
+  border-bottom: .55mm solid #162939;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 17.5pt;
+}
+h3 { margin: 7mm 0 3mm; color: #1d415a; font-size: 12.8pt; }
+h4 { margin: 5mm 0 2mm; color: #2a536b; font-size: 11pt; }
+code {
+  padding: .7pt 2.4pt;
+  border: .2mm solid #dce3e8;
+  border-radius: 2pt;
+  background: #f3f6f8;
+  color: #9c3f2e;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 8.4pt;
+  overflow-wrap: anywhere;
+}
+pre {
+  margin: 4mm 0 6mm;
+  padding: 4mm;
+  border-left: 1.2mm solid #c46a42;
+  background: #f4f6f7;
+  color: #22313f;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 8pt;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  break-inside: avoid;
+}
+pre code { padding: 0; border: 0; background: transparent; color: inherit; }
+.codehilite { margin: 4mm 0 6mm; break-inside: avoid; }
+.codehilite pre { margin: 0; }
+table {
+  width: 100%;
+  margin: 4mm 0 6mm;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 8.5pt;
+  line-height: 1.45;
+}
+thead { display: table-header-group; }
+tr { break-inside: avoid; }
+th {
+  padding: 2.3mm 2mm;
+  color: #fff;
+  background: #223b4d;
+  border: .25mm solid #223b4d;
+  text-align: left;
+  vertical-align: middle;
+}
+td {
+  padding: 2mm;
+  border: .22mm solid #d5dee4;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+tbody tr:nth-child(even) td { background: #f4f7f8; }
+blockquote {
+  margin: 4mm 0;
+  padding: 3.5mm 4.5mm;
+  border-left: 1.3mm solid #c46a42;
+  background: #f7f4f1;
+}
+img { display: block; max-width: 100%; margin: 5mm auto; }
+mjx-container[display="true"] { margin: 4mm 0 !important; }
+</style>
+
+</head>
+<body>
+<section class="cover">
+  <header class="cover-header">
+    <div>MULTIMODAL NEURAL OPERATOR</div>
+    <div>研究文档</div>
+  </header>
+  <main class="cover-main">
+    <p class="cover-overline">RESEARCH AND DELIVERY DOCUMENT</p>
+    <h1>多模态神经算子代码导航</h1>
+    <p class="cover-subtitle">多模态神经算子文档包</p>
+    <div class="cover-rule"></div>
+    <p class="cover-summary">BURGERS EQUATION / OPERATOR LEARNING / EVIDENCE</p>
+  </main>
+  <footer class="cover-footer">
+    <div class="cover-project">
+      <span>项目</span>
+      <strong>多模态神经算子融合研究</strong>
+    </div>
+    <div class="cover-meta">
+      <div><span>日期</span><strong>2026 年 11 月 9 日</strong></div>
+      <div><span>格式</span><strong>A4 PDF</strong></div>
+    </div>
+  </footer>
+</section>
+<nav class="toc-shell">
+  <p class="section-kicker">CONTENTS</p>
+  <h2>目录</h2>
+  <div class="toc">
+<ul>
+<li><a href="#核心代码位置">📍 核心代码位置</a></li>
+<li><a href="#架构组成">🏗️ 架构组成</a></li>
+<li><a href="#信息流">🔄 信息流</a></li>
+<li><a href="#关键函数">📋 关键函数</a></li>
+<li><a href="#关键参数调节">🔧 关键参数调节</a></li>
+<li><a href="#代码统计">💾 代码统计</a></li>
+<li><a href="#快速开始修改">🎯 快速开始修改</a></li>
+<li><a href="#文件关系">📚 文件关系</a></li>
+</ul>
+</div>
+
+</nav>
+<main class="content"><h2 id="核心代码位置">📍 核心代码位置</h2>
+<p><strong>主文件</strong>: <code>code/demo_burgers_dataset.py</code> (3950行)</p>
+<hr>
+<h2 id="架构组成">🏗️ 架构组成</h2>
+<h3 id="1-配置类-line-36-130">1. 配置类 (Line 36-130)</h3>
+<div class="codehilite"><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DatasetConfig</span><span class="p">:</span>
+    <span class="c1"># 关键参数</span>
+    <span class="n">use_cross_attention</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>        <span class="c1"># 交叉注意力开关</span>
+    <span class="n">manifold_arch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mlp&quot;</span>              <span class="c1"># manifold编码器架构</span>
+    <span class="n">manifold_hidden</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">128</span>              <span class="c1"># manifold隐层维度</span>
+    <span class="n">dropout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span>                   <span class="c1"># Dropout正则化</span>
+    <span class="n">physics_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span>            <span class="c1"># 物理约束权重</span>
+    <span class="n">sensor_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>                   <span class="c1"># 传感器数量</span>
+    <span class="o">...</span>
+</code></pre></div>
+
+<h3 id="2-交叉注意力机制-line-452-490">2. 交叉注意力机制 (Line 452-490)</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ManualAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;交叉注意力: 传感器信息和PDE约束的动态融合&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># 动态调整物理权重</span>
+        <span class="c1"># 融合多模态信息</span>
+</code></pre></div>
+
+<p><strong>位置</strong>: 第452行</p>
+<h3 id="3-manifold编码器-line-531-625">3. Manifold编码器 (Line 531-625)</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ManifoldAutoencoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;学习隐式PDE求解算子的低维表示&quot;&quot;&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ConvManifoldAutoencoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;卷积版本的Manifold编码器(更强大)&quot;&quot;&quot;</span>
+</code></pre></div>
+
+<p><strong>位置</strong>: 第531行-625行</p>
+<h3 id="4-transformer编码器-line-510-530">4. Transformer编码器 (Line 510-530)</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TransformerEncoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;多头自注意力编码器&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
+        <span class="c1"># 处理sensor tokens序列</span>
+        <span class="c1"># 提取高阶特征</span>
+</code></pre></div>
+
+<p><strong>位置</strong>: 第510行</p>
+<h3 id="5-神经算子主体-line-700">5. 神经算子主体 (Line 700+)</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">NeuralOperatorModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;完整的混合PINN架构&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+        <span class="c1"># Manifold编码器</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manifold</span> <span class="o">=</span> <span class="n">build_manifold</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+
+        <span class="c1"># 交叉注意力</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cross_attention</span> <span class="o">=</span> <span class="n">ManualAttention</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+        <span class="c1"># Transformer编码器</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">TransformerEncoder</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+        <span class="c1"># 查询解码器</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query_decoder</span> <span class="o">=</span> <span class="o">...</span>
+</code></pre></div>
+
+<hr>
+<h2 id="信息流">🔄 信息流</h2>
+<div class="codehilite"><pre><span></span><code>输入: u(x,t) + 传感器观测 + PDE约束
+  ↓
+[1] Manifold编码 (line 531+)
+    └─ 降维: (batch, nx, nt) → (batch, latent_dim)
+  ↓
+[2] 交叉注意力融合 (line 452+)
+    ├─ 融合多模态传感器信息
+    └─ 动态调整physics_weight
+  ↓
+[3] Transformer特征提取 (line 510+)
+    └─ 多头自注意力处理token序列
+  ↓
+[4] 查询解码 (line 664+)
+    └─ 生成u(x,t,c)预测
+  ↓
+[5] PDE损失计算 (line 2000+)
+    ├─ 数据项: MSE(u_pred, u_true)
+    └─ 物理项: ∂u/∂t + u∂u/∂x - ν∂²u/∂x²
+  ↓
+输出: u_pred(x,t) + PDE residual
+</code></pre></div>
+
+<hr>
+<h2 id="关键函数">📋 关键函数</h2>
+<table>
+<thead>
+<tr>
+<th>函数名</th>
+<th>行号</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>build_manifold()</code></td>
+<td>627</td>
+<td>构建manifold编码器</td>
+</tr>
+<tr>
+<td><code>create_model()</code></td>
+<td>~3000</td>
+<td>创建完整模型</td>
+</tr>
+<tr>
+<td><code>train()</code></td>
+<td>~2500</td>
+<td>训练循环</td>
+</tr>
+<tr>
+<td><code>evaluate_split()</code></td>
+<td>~2000</td>
+<td>评估指标</td>
+</tr>
+<tr>
+<td><code>compute_pde_loss()</code></td>
+<td>~1800</td>
+<td>PDE残差计算</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="关键参数调节">🔧 关键参数调节</h2>
+<h3 id="交叉注意力">交叉注意力</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 启用/禁用</span>
+<span class="o">--</span><span class="n">use</span><span class="o">-</span><span class="n">cross</span><span class="o">-</span><span class="n">attention</span>      <span class="c1"># 启用交叉注意力</span>
+<span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cross</span><span class="o">-</span><span class="n">attention</span>       <span class="c1"># 禁用(降级为简单融合)</span>
+</code></pre></div>
+
+<h3 id="manifold编码器">Manifold编码器</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 架构选择</span>
+<span class="o">--</span><span class="n">manifold</span><span class="o">-</span><span class="n">arch</span> <span class="n">mlp</span>        <span class="c1"># MLP版本(轻量)</span>
+<span class="o">--</span><span class="n">manifold</span><span class="o">-</span><span class="n">arch</span> <span class="n">conv</span>       <span class="c1"># 卷积版本(强大)</span>
+
+<span class="c1"># 容量控制</span>
+<span class="o">--</span><span class="n">manifold</span><span class="o">-</span><span class="n">hidden</span> <span class="mi">128</span>      <span class="c1"># 隐层维度</span>
+<span class="o">--</span><span class="n">latent</span><span class="o">-</span><span class="n">dim</span> <span class="mi">16</span>           <span class="c1"># 潜在空间维度</span>
+</code></pre></div>
+
+<h3 id="物理权重">物理权重</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 调整物理约束强度</span>
+<span class="o">--</span><span class="n">physics</span><span class="o">-</span><span class="n">weight</span> <span class="mf">0.1</span>       <span class="c1"># 训练时权重</span>
+<span class="o">--</span><span class="n">validation</span><span class="o">-</span><span class="n">physics</span><span class="o">-</span><span class="n">weight</span> <span class="mf">0.1</span>  <span class="c1"># 验证时权重</span>
+
+<span class="c1"># 动态调整由交叉注意力处理</span>
+</code></pre></div>
+
+<hr>
+<h2 id="代码统计">💾 代码统计</h2>
+<div class="codehilite"><pre><span></span><code>总行数: 3950
+关键类: 15+
+主要模块:
+  - Manifold编码 (100行)
+  - 交叉注意力 (50行)
+  - Transformer (100行)
+  - 神经算子主体 (200行)
+  - 训练循环 (300行)
+  - PDE损失计算 (200行)
+</code></pre></div>
+
+<hr>
+<h2 id="快速开始修改">🎯 快速开始修改</h2>
+<h3 id="要修改架构">要修改架构</h3>
+<ol>
+<li>打开 <code>demo_burgers_dataset.py</code></li>
+<li>找到 <code>class NeuralOperatorModel</code> (~700行)</li>
+<li>修改 <code>__init__</code> 和 <code>forward</code> 方法</li>
+</ol>
+<h3 id="要修改物理约束">要修改物理约束</h3>
+<ol>
+<li>找到 <code>compute_pde_loss()</code> (~1800行)</li>
+<li>修改PDE方程项</li>
+<li>调整 <code>physics_weight</code></li>
+</ol>
+<h3 id="要修改数据增强">要修改数据增强</h3>
+<ol>
+<li>打开 <code>augment_burgers.py</code></li>
+<li>修改增强策略</li>
+<li>重新生成数据</li>
+</ol>
+<hr>
+<h2 id="文件关系">📚 文件关系</h2>
+<div class="codehilite"><pre><span></span><code>demo_burgers_dataset.py (主训练脚本)
+├─ 定义: NeuralOperatorModel
+├─ 定义: DatasetConfig
+├─ 包含: 训练循环
+└─ 调用: augment_burgers.py (数据加载)
+
+augment_burgers.py (数据增强)
+├─ 空间增强
+├─ 时间增强
+└─ Diffusion验证
+
+train_baseline_resnet.py (数据驱动基线)
+└─ 用于对比
+</code></pre></div>
+
+<hr>
+<p><strong>当前最优方案</strong>: v_aug3x_xl_d128_l4
+- 位置: <code>experiments/v_aug3x_xl_d128_l4/</code>
+- 性能: PDE RMS = 0.001059
+- 代码配置: <code>--preset wide --d-model 128 --n-layers 4</code></p></main>
+</body>
+</html>

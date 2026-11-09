@@ -1,0 +1,214 @@
+{
+  "preset": "balanced",
+  "config": {
+    "data_dir": "../datasets/burgers_augmented_test",
+    "train_file": "burgers_augmented_train.npz",
+    "dev_file": "burgers_augmented_dev.npz",
+    "test_file": "burgers_augmented_test.npz",
+    "train_samples": 512,
+    "dev_samples": 64,
+    "test_samples": 128,
+    "eval_samples": 32,
+    "nx": 256,
+    "nt": 101,
+    "nu": 0.01,
+    "latent_dim": 16,
+    "manifold_hidden": 128,
+    "manifold_arch": "mlp",
+    "conv_ae_channels": 16,
+    "denoise_sigma": 0.0,
+    "denoise_weight": 0.0,
+    "denoise_steps": 0,
+    "denoise_rate": 0.5,
+    "denoise_eval_sigma": 0.0,
+    "denoise_until": -1,
+    "embed_flow": false,
+    "embed_flow_max_sigma": 1.0,
+    "embed_flow_weight": 0.1,
+    "use_cross_attention": true,
+    "tokenizer": "cnn",
+    "arch": "full",
+    "dropout": 0.05,
+    "input_highpass": false,
+    "highpass_scale": 1.0,
+    "highpass_kernel": 15,
+    "sensor_count": 0,
+    "sensor_time": 0.5,
+    "fourier_bands": 4,
+    "time_fourier_bands": 4,
+    "cnn_channels": 24,
+    "cnn_kernel_size": 5,
+    "token_count": 16,
+    "d_model": 32,
+    "n_heads": 4,
+    "n_layers": 2,
+    "head_width": 32,
+    "batch_size": 64,
+    "data_points_per_sample": 32,
+    "physics_points_per_sample": 4,
+    "initial_points_per_sample": 16,
+    "boundary_points_per_sample": 1,
+    "initial_patch_radius": 0,
+    "physics_slope_bias": 0.0,
+    "periodic_derivative_weight": 0.0,
+    "use_manifold_cnn": false,
+    "query_local_features": false,
+    "query_local_window": 0,
+    "time_conditioned_context": false,
+    "data_gradient_weight": 0.0,
+    "decoder": "query",
+    "grid_channels": 16,
+    "grid_layers": 3,
+    "grid_seed": 16,
+    "spectral_modes_x": 12,
+    "spectral_modes_t": 8,
+    "latent_ode": false,
+    "latent_channels": 16,
+    "latent_levels": 3,
+    "ode_steps": 4,
+    "ode_hidden": 64,
+    "temporal": "ode",
+    "rollout_steps": 8,
+    "rollout_teacher_forcing": 0.0,
+    "rollout_delta": false,
+    "operator_attention": false,
+    "manifold_steps": 500,
+    "steps": 24000,
+    "lr_decay_steps": 4000,
+    "lr": 0.0005,
+    "optimizer": "adamw",
+    "weight_decay": 0.0001,
+    "manifold_weight_decay": 0.0,
+    "online_shift_augment": false,
+    "grad_clip_norm": 1.0,
+    "min_lr_ratio": 0.02,
+    "loss_balance": true,
+    "loss_floor": 0.001,
+    "loss_balance_warmup": 0,
+    "warmup_steps": 200,
+    "physics_weight": 0.05,
+    "validation_physics_weight": 0.1,
+    "eval_every": 200,
+    "early_stop_patience": 8,
+    "early_stop_min_delta": 0.0,
+    "early_stop_min_fraction": 0.75,
+    "log_every": 50,
+    "seed": 42
+  },
+  "parameter_count": 102921,
+  "parameter_breakdown": {
+    "fourier": 0,
+    "manifold": 70160,
+    "cnn": 2040,
+    "token_proj": 800,
+    "latent_proj": 544,
+    "context_encoder": 17088,
+    "query_proj": 2144,
+    "cross_attention": 4224,
+    "norm1": 64,
+    "ffn": 4192,
+    "norm2": 64,
+    "head": 1089,
+    "time_fourier": 0
+  },
+  "training_seconds": 631.1581137999892,
+  "train": {
+    "relative_l2": NaN,
+    "pde_rms": 0.8824754357337952
+  },
+  "dev": {
+    "relative_l2": NaN,
+    "pde_rms": 0.9469058513641357
+  },
+  "test": {
+    "relative_l2": NaN,
+    "pde_rms": 0.9224240779876709
+  },
+  "stability": {
+    "max_grad_norm": 1.431509017944336,
+    "mean_grad_norm": 0.45685151726641554,
+    "clipped_steps": 1.0,
+    "skipped_steps": 23953.0,
+    "grad_clip_norm": 1.0,
+    "loss_balance_enabled": true,
+    "loss_references": {
+      "physics": 0.8562630414962769,
+      "initial": 0.6897571086883545,
+      "boundary": 0.007106850855052471,
+      "reconstruction": 0.020433884114027023,
+      "data": 0.1785230040550232
+    },
+    "best_dev_score": Infinity,
+    "best_dev_step": -1.0,
+    "stopped_early": false,
+    "early_stop_armed": false,
+    "early_stop_min_fraction": 0.75,
+    "completed_steps": 24000.0,
+    "stale_evaluations": 0.0
+  },
+  "gap": {
+    "test_minus_train_relative_l2": NaN,
+    "test_over_train_ratio": NaN,
+    "diagnosis": "balanced"
+  },
+  "manifold_history": [
+    {
+      "step": 0.0,
+      "manifold_loss": 0.7793687582015991,
+      "grad_norm": 0.06557263433933258
+    },
+    {
+      "step": 50.0,
+      "manifold_loss": 0.22632288932800293,
+      "grad_norm": 0.08446923643350601
+    },
+    {
+      "step": 100.0,
+      "manifold_loss": 0.12761762738227844,
+      "grad_norm": 0.08093851804733276
+    },
+    {
+      "step": 150.0,
+      "manifold_loss": 0.10393251478672028,
+      "grad_norm": 0.0737655982375145
+    },
+    {
+      "step": 200.0,
+      "manifold_loss": 0.09690169990062714,
+      "grad_norm": 0.08288383483886719
+    },
+    {
+      "step": 250.0,
+      "manifold_loss": 0.06895465403795242,
+      "grad_norm": 0.07213760167360306
+    },
+    {
+      "step": 300.0,
+      "manifold_loss": 0.042282670736312866,
+      "grad_norm": 0.050627920776605606
+    },
+    {
+      "step": 350.0,
+      "manifold_loss": 0.033036649227142334,
+      "grad_norm": 0.05046919733285904
+    },
+    {
+      "step": 400.0,
+      "manifold_loss": 0.03380006551742554,
+      "grad_norm": 0.05453353375196457
+    },
+    {
+      "step": 450.0,
+      "manifold_loss": 0.024059470742940903,
+      "grad_norm": 0.043810054659843445
+    },
+    {
+      "step": 499.0,
+      "manifold_loss": 0.021169349551200867,
+      "grad_norm": 0.03203659504652023,
+      "max_grad_norm": 0.4048357903957367,
+      "skipped_steps": 0.0
+    }
+  ],
+  "training_history": []
+}

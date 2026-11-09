@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import pandas, pyarrow, numpy, matplotlib, tqdm; print\\('✅ 所有依赖已安装成功'\\)\")",
+      "Bash(python quickstart_augment_train.py --quick-test)"
+    ]
+  }
+}

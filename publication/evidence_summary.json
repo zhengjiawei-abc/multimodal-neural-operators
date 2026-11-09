@@ -1,0 +1,61 @@
+{
+  "document_date": "2026-11-09",
+  "scope": "current_xl_multimodal_neural_operator_burgers",
+  "architecture": {
+    "d_model": 128,
+    "n_layers": 4,
+    "n_heads": 4,
+    "field_tokens": 32,
+    "latent_dim": 32,
+    "manifold_hidden": 256,
+    "manifold_arch": "mlp",
+    "sensors": 8,
+    "latent_ode": false,
+    "manifold_cnn": false,
+    "input_highpass": false,
+    "parameters": 874209
+  },
+  "data": {
+    "directory": "datasets/burgers_augmented_v1",
+    "train": 2956,
+    "dev": 633,
+    "test": 635,
+    "eval_samples": 32
+  },
+  "main_run": {
+    "directory": "experiments/v_aug3x_xl_d128_l4",
+    "seed": 42,
+    "steps": 24000,
+    "best_step": 22000,
+    "training_seconds": 1606.9614661000087,
+    "train_relative_l2": 0.201058802427724,
+    "dev_relative_l2": 0.24136117426678538,
+    "test_relative_l2": 0.2460868963971734,
+    "test_pde_rms": 0.0010591831523925066,
+    "physics_weight": 0.1,
+    "dropout": 0.1
+  },
+  "sensitivity_run": {
+    "directory": "experiments/v_aug3x_xl_physics15",
+    "seed": 42,
+    "best_step": 22500,
+    "test_relative_l2": 0.223470731638372,
+    "test_pde_rms": 0.00106208270881325,
+    "physics_weight": 0.15,
+    "dropout": 0.08,
+    "note": "Two factors change together and only one run is retained."
+  },
+  "legacy_reference": {
+    "directory": "experiments/outputs_burgers_dataset/custom_v11_multimodal_sensors8_24k",
+    "parameters": 341026,
+    "test_relative_l2": 0.11531892407219857,
+    "test_pde_rms": 1.0387089252471924,
+    "note": "Different data and architecture; descriptive comparison only."
+  },
+  "source_paths": {
+    "model": "code/demo_burgers_dataset.py",
+    "augmentation": "datasets/augment_existing_data.py",
+    "main_metrics": "experiments/v_aug3x_xl_d128_l4/metrics.json",
+    "sensitivity_metrics": "experiments/v_aug3x_xl_physics15/metrics.json"
+  }
+}

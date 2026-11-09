@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><base href="file:///C:/Users/%E9%83%91%E7%82%9C%E9%94%8B/Desktop/pinn_hybrid_demo_20261001/">
+<meta charset="utf-8">
+<meta name="author" content="">
+<meta name="description" content="Burgers 方程多模态神经算子：证据审计、周期平移增强与传感器融合边界">
+<title>Burgers 方程多模态神经算子：证据审计、周期平移增强与传感器融合边界</title>
+<style>
+@font-face {
+  font-family: "DocumentSans";
+  src: url("file:///C:/Windows/Fonts/NotoSansSC-VF.ttf") format("truetype");
+  font-weight: 100 900;
+}
+@font-face {
+  font-family: "DocumentSerif";
+  src: url("file:///C:/Windows/Fonts/NotoSerifSC-VF.ttf") format("truetype");
+  font-weight: 100 900;
+}
+@page {
+  size: A4;
+  margin: 22mm 18mm 19mm 18mm;
+}
+@page :first {
+  margin: 0;
+}
+* { box-sizing: border-box; }
+html { color-scheme: light; }
+body {
+  margin: 0;
+  color: #263241;
+  background: #fff;
+  font-family: "DocumentSans", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  font-size: 10pt;
+  line-height: 1.72;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+p {
+  margin: 0 0 7.5pt;
+  text-align: justify;
+  orphans: 3;
+  widows: 3;
+}
+strong { color: #172333; font-weight: 700; }
+a { color: #1f5d85; text-decoration: none; }
+ul, ol { margin: 5pt 0 9pt 0; padding-left: 20pt; }
+li { margin: 2.4pt 0; padding-left: 1.5pt; }
+li::marker { color: #b65b35; }
+hr { display: none; }
+
+.cover {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  overflow: hidden;
+  padding: 23mm 22mm 20mm;
+  color: #f4f7fa;
+  background: #162939;
+  break-after: page;
+  display: flex;
+  flex-direction: column;
+}
+.cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 14mm 14mm;
+  pointer-events: none;
+}
+.cover::after {
+  content: "";
+  position: absolute;
+  width: 78mm;
+  height: 7mm;
+  right: 0;
+  top: 57mm;
+  background: #c46a42;
+}
+.cover-header, .cover-main, .cover-footer { position: relative; z-index: 1; }
+.cover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 6mm;
+  border-bottom: 0.35mm solid rgba(255,255,255,.24);
+  color: #bfd0db;
+  font-size: 8pt;
+  letter-spacing: .09em;
+}
+.cover-brand { display: flex; align-items: center; gap: 3mm; font-weight: 700; }
+.cover-mark {
+  display: inline-block;
+  width: 7mm;
+  height: 1.2mm;
+  background: #c46a42;
+}
+.cover-main { margin-top: 58mm; max-width: 166mm; }
+.cover-overline {
+  margin: 0 0 8mm;
+  color: #d8a58c;
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-align: left;
+}
+.cover h1 {
+  margin: 0;
+  max-width: 165mm;
+  color: #fff;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 27pt;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+.cover-subtitle {
+  margin: 7mm 0 0;
+  color: #d6e0e7;
+  font-size: 15pt;
+  font-weight: 350;
+  line-height: 1.45;
+  text-align: left;
+}
+.cover-rule {
+  width: 32mm;
+  height: 1mm;
+  margin-top: 10mm;
+  background: #c46a42;
+}
+.cover-summary {
+  margin-top: 6mm;
+  color: #aebfcb;
+  font-size: 8.4pt;
+  letter-spacing: .08em;
+  text-align: left;
+}
+.cover-footer {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 18mm;
+  align-items: end;
+  padding-top: 7mm;
+  border-top: 0.35mm solid rgba(255,255,255,.24);
+}
+.cover-project span, .cover-meta span {
+  display: block;
+  margin-bottom: 2mm;
+  color: #91a8b7;
+  font-size: 7.5pt;
+  letter-spacing: .08em;
+}
+.cover-project strong { display: block; color: #f4f7fa; font-size: 11pt; line-height: 1.5; }
+.cover-meta { display: flex; gap: 9mm; flex-wrap: wrap; }
+.cover-meta strong { display: block; color: #f4f7fa; font-size: 9.5pt; }
+
+main.content > h1:first-child { display: none; }
+.toc-shell {
+  break-after: page;
+  min-height: 230mm;
+}
+.section-kicker {
+  margin: 0 0 1mm;
+  color: #b65b35;
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-align: left;
+}
+.toc-shell h2 {
+  margin: 0 0 12mm;
+  padding: 0 0 4mm;
+  color: #162939;
+  border: 0;
+  border-bottom: 0.7mm solid #162939;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 24pt;
+  line-height: 1.2;
+}
+.toc-shell ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.toc-shell li {
+  margin: 0;
+  padding: 3mm 0;
+  border-bottom: 0.25mm solid #d9e0e5;
+  font-size: 10.2pt;
+}
+.toc-shell li a { color: #263241; font-weight: 600; }
+.toc-shell li a::before {
+  content: "";
+  display: inline-block;
+  width: 4mm;
+  height: 1.4mm;
+  margin-right: 3mm;
+  background: #c46a42;
+  vertical-align: .1em;
+}
+.toc-shell ul ul { display: none; }
+
+h1, h2, h3, h4 { break-after: avoid; }
+h1 {
+  margin: 0 0 8mm;
+  color: #162939;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 24pt;
+  line-height: 1.3;
+}
+h2 {
+  margin: 12mm 0 6mm;
+  padding: 0 0 4mm;
+  color: #162939;
+  border-bottom: 0.55mm solid #162939;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 18pt;
+  line-height: 1.35;
+}
+h2::before {
+  content: "";
+  display: block;
+  width: 16mm;
+  height: 1mm;
+  margin-bottom: 4mm;
+  background: #c46a42;
+}
+h3 {
+  margin: 8mm 0 3.5mm;
+  color: #1d415a;
+  font-size: 12.8pt;
+  line-height: 1.45;
+}
+h4 {
+  margin: 6mm 0 2.8mm;
+  color: #2a536b;
+  font-size: 11pt;
+  line-height: 1.45;
+}
+h2 + h3, h3 + h4 { margin-top: 0; }
+p:has(+ pre),
+p:has(+ .codehilite),
+p:has(+ table),
+p:has(+ ul),
+p:has(+ ol) { break-after: avoid; }
+
+code {
+  padding: 0.7pt 2.4pt;
+  border: 0.2mm solid #dce3e8;
+  border-radius: 2pt;
+  background: #f3f6f8;
+  color: #9c3f2e;
+  font-family: "Cascadia Code", Consolas, "DocumentSans", monospace;
+  font-size: 8.4pt;
+  overflow-wrap: anywhere;
+}
+pre {
+  margin: 5mm 0 7mm;
+  padding: 4mm 4.5mm;
+  border-left: 1.2mm solid #c46a42;
+  background: #f4f6f7;
+  color: #22313f;
+  font-family: "Cascadia Code", Consolas, "DocumentSans", monospace;
+  font-size: 7.9pt;
+  line-height: 1.52;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  tab-size: 2;
+  break-inside: avoid;
+}
+pre code { padding: 0; border: 0; background: transparent; color: inherit; }
+.codehilite { margin: 5mm 0 7mm; break-inside: avoid; }
+.codehilite pre { margin: 0; }
+
+table {
+  width: 100%;
+  margin: 4mm 0 7mm;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 8.3pt;
+  line-height: 1.48;
+  break-inside: avoid;
+}
+thead { display: table-header-group; }
+tr { break-inside: avoid; }
+th {
+  padding: 2.4mm 2mm;
+  color: #fff;
+  background: #223b4d;
+  border: 0.25mm solid #223b4d;
+  font-weight: 700;
+  text-align: left;
+  vertical-align: middle;
+}
+td {
+  padding: 2.1mm 2mm;
+  border: 0.22mm solid #d5dee4;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+tbody tr:nth-child(even) td { background: #f4f7f8; }
+td strong { color: #a5472f; }
+
+blockquote {
+  margin: 5mm 0;
+  padding: 3.5mm 4.5mm;
+  border-left: 1.3mm solid #c46a42;
+  background: #f7f4f1;
+  color: #475663;
+}
+blockquote p:last-child { margin-bottom: 0; }
+
+img {
+  display: block;
+  max-width: 100%;
+  max-height: 215mm;
+  margin: 6mm auto;
+  object-fit: contain;
+}
+mjx-container { color: #263241; }
+mjx-container[display="true"] {
+  margin: 5mm 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+@media print {
+  a { text-decoration: none; }
+  .content h2, .content h3, .content h4 { -webkit-column-break-after: avoid; }
+}
+pre { line-height: 125%; }
+td.linenos .normal { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f0f0f0; }
+.codehilite .c { color: #60A0B0; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #F00 } /* Error */
+.codehilite .k { color: #007020; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666 } /* Operator */
+.codehilite .ch { color: #60A0B0; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #60A0B0; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #007020 } /* Comment.Preproc */
+.codehilite .cpf { color: #60A0B0; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #60A0B0; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #60A0B0; background-color: #FFF0F0 } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #F00 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #00A000 } /* Generic.Inserted */
+.codehilite .go { color: #888 } /* Generic.Output */
+.codehilite .gp { color: #C65D09; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #04D } /* Generic.Traceback */
+.codehilite .kc { color: #007020; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #007020; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #007020; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #007020 } /* Keyword.Pseudo */
+.codehilite .kr { color: #007020; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #902000 } /* Keyword.Type */
+.codehilite .m { color: #40A070 } /* Literal.Number */
+.codehilite .s { color: #4070A0 } /* Literal.String */
+.codehilite .na { color: #4070A0 } /* Name.Attribute */
+.codehilite .nb { color: #007020 } /* Name.Builtin */
+.codehilite .nc { color: #0E84B5; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #60ADD5 } /* Name.Constant */
+.codehilite .nd { color: #555; font-weight: bold } /* Name.Decorator */
+.codehilite .ni { color: #D55537; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #007020 } /* Name.Exception */
+.codehilite .nf { color: #06287E } /* Name.Function */
+.codehilite .nl { color: #002070; font-weight: bold } /* Name.Label */
+.codehilite .nn { color: #0E84B5; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #062873; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #BB60D5 } /* Name.Variable */
+.codehilite .ow { color: #007020; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #BBB } /* Text.Whitespace */
+.codehilite .mb { color: #40A070 } /* Literal.Number.Bin */
+.codehilite .mf { color: #40A070 } /* Literal.Number.Float */
+.codehilite .mh { color: #40A070 } /* Literal.Number.Hex */
+.codehilite .mi { color: #40A070 } /* Literal.Number.Integer */
+.codehilite .mo { color: #40A070 } /* Literal.Number.Oct */
+.codehilite .sa { color: #4070A0 } /* Literal.String.Affix */
+.codehilite .sb { color: #4070A0 } /* Literal.String.Backtick */
+.codehilite .sc { color: #4070A0 } /* Literal.String.Char */
+.codehilite .dl { color: #4070A0 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #4070A0; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #4070A0 } /* Literal.String.Double */
+.codehilite .se { color: #4070A0; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #4070A0 } /* Literal.String.Heredoc */
+.codehilite .si { color: #70A0D0; font-style: italic } /* Literal.String.Interpol */
+.codehilite .sx { color: #C65D09 } /* Literal.String.Other */
+.codehilite .sr { color: #235388 } /* Literal.String.Regex */
+.codehilite .s1 { color: #4070A0 } /* Literal.String.Single */
+.codehilite .ss { color: #517918 } /* Literal.String.Symbol */
+.codehilite .bp { color: #007020 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #06287E } /* Name.Function.Magic */
+.codehilite .vc { color: #BB60D5 } /* Name.Variable.Class */
+.codehilite .vg { color: #BB60D5 } /* Name.Variable.Global */
+.codehilite .vi { color: #BB60D5 } /* Name.Variable.Instance */
+.codehilite .vm { color: #BB60D5 } /* Name.Variable.Magic */
+.codehilite .il { color: #40A070 } /* Literal.Number.Integer.Long */
+</style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [["\\(", "\\)"], ["$", "$"]],
+    displayMath: [["\\[", "\\]"], ["$$", "$$"]],
+    processEscapes: true
+  },
+  svg: { fontCache: "global" },
+  options: { enableMenu: false, skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"] },
+  startup: { typeset: false }
+};
+window.__mathjaxLoaded = false;
+window.__mathjaxFailed = false;
+</script>
+<script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+  onload="window.__mathjaxLoaded = true"
+  onerror="window.__mathjaxFailed = true"></script>
+</head>
+<body>
+
+    <section class="cover">
+      <header class="cover-header">
+        <div class="cover-brand"><span class="cover-mark"></span><span>MULTIMODAL NEURAL OPERATOR</span></div>
+        <div>研究文档系列</div>
+      </header>
+      <main class="cover-main">
+        <p class="cover-overline">研究与交付文档</p>
+        <h1>Burgers 方程多模态神经算子：证据审计、周期平移增强与传感器融合边界</h1>
+        <p class="cover-subtitle">严格周期平移增强与多模态融合的可验证结论</p>
+        <div class="cover-rule"></div>
+        <p class="cover-summary">融合策略 / 实验分析 / 工程指南</p>
+      </main>
+      <footer class="cover-footer">
+        <div class="cover-project">
+          <span>项目</span>
+          <strong>多模态神经算子融合研究</strong>
+        </div>
+        <div class="cover-meta"><div><span>日期</span><strong>2026 年 11 月 8 日</strong></div><div><span>作者</span><strong>作者信息待补充</strong></div></div>
+      </footer>
+    </section>
+    
+<main class="content">
+<nav class="toc-shell"><p class="section-kicker">目录</p><h2>目录</h2><div class="toc">
+<ul>
+<li><a href="#摘要">摘要</a></li>
+<li><a href="#1-引言">1 引言</a></li>
+<li><a href="#2-问题与证据基础">2 问题与证据基础</a></li>
+<li><a href="#3-多模态算子结构">3 多模态算子结构</a></li>
+<li><a href="#4-训练与评价协议">4 训练与评价协议</a></li>
+<li><a href="#5-存档融合对比的审计">5 存档融合对比的审计</a></li>
+<li><a href="#6-结果">6 结果</a></li>
+<li><a href="#7-缺失融合研究的可复现协议">7 缺失融合研究的可复现协议</a></li>
+<li><a href="#8-局限性">8 局限性</a></li>
+<li><a href="#9-结论">9 结论</a></li>
+<li><a href="#数据与代码可用性">数据与代码可用性</a></li>
+<li><a href="#参考文献">参考文献</a></li>
+<li><a href="#附录-a-运行来源">附录 A 运行来源</a></li>
+<li><a href="#附录-b-最低报告清单">附录 B 最低报告清单</a></li>
+</ul>
+</div>
+</nav><h2 id="摘要">摘要</h2>
+<p>多模态神经算子试图把密集场观测与稀疏传感器测量结合起来，同时保留神经算子在任意坐标上推理的能力。本文以一维黏性 Burgers 方程为对象，研究这一目标在当前项目中能够被证据支持到什么程度。模型先把初始场编码为卷积 token 和低维潜变量，在潜空间积分时间演化，再通过交叉注意力解码任意时空查询。传感器读数被投影到同一 token 空间，并在上下文编码器之前与场 token 拼接。因此，当前实现属于“早期 token 拼接加后期查询注意力”的混合融合，而不是理想的纯早期融合或纯晚期融合。</p>
+<p>本文报告两组证据。第一，严格周期平移增强把 1,408 条训练轨迹扩展为 4,224 条：对完整时空解沿周期空间方向做循环平移，不改变方程。三个配对随机种子的平均测试相对 L2 从 0.103485 降到 0.097188，相对改善 6.09%，三个种子全部改善，验证集相对 L2 也全部改善。PDE 残差没有一致改善，因此该结果支持“空间覆盖与预测精度提升”，不支持“物理一致性全面提升”。</p>
+<p>第二，本文审计两条分别标记为交叉注意力和预融合的存档运行。两份配置完全相同，参数量相同，当前训练入口也没有独立的预融合控制项。两次运行的数值不同，但现有产物无法把差异归因于融合策略。此外，八传感器初步试验差于匹配的纯场参考。因此，本文将直接传感器融合视为负结果，并给出后续比较所需的跨模态对齐损失、模态丢弃、配对随机种子和架构指纹。核心结论保持克制：周期平移增强在测试基准上得到支持，多模态融合收益尚未得到证明。</p>
+<p><strong>关键词</strong>: 神经算子；多模态学习；传感器融合；Burgers 方程；周期增强；可复现性</p>
+<h2 id="1-引言">1 引言</h2>
+<p>神经算子学习函数空间之间的映射，可以在推理时以不依赖固定数值网格的方式近似 PDE 解算子 [1-4]。多数神经算子基准假设输入是一个定义良好的场。实际工程系统往往提供多种观测：仿真给出密集初始场，检测系统给出少量测点；气象模型同时接收卫星场和地面站；结构监测系统同时使用全场测量与稀疏传感器网络。</p>
+<p>多模态输入带来一个直接问题：不同模态应在何处第一次交互，哪些参数应共享，模型如何区分来自不同物理来源的信息？常见叙事是比较早期特征融合与晚期注意力融合，并期待一种策略在精度上更好、另一种在物理一致性上更好。这个叙事有吸引力，但成立需要独立可辨识的实现、匹配的训练预算、重复随机种子，以及能够隔离融合机制的评测协议。</p>
+<p>本文回到项目保存的产物，检查这些主张是否成立。结论比最初叙事更有限。两条带不同融合标签的存档运行确实产生了不同结果，但保存的配置和参数签名不足以证明它们是两条不同的计算图。与此同时，后续的单模态实验提供了更干净的正面结果：严格周期平移在不改变 PDE、分辨率、模型规模和优化预算的前提下，改善了三个配对运行。</p>
+<p>本文有四方面贡献。</p>
+<ol>
+<li>把当前多模态算子写成明确的计算图，并指出其融合路径属于混合 token 融合。</li>
+<li>通过三个配对随机种子，建立严格周期平移增强的可重复正面结果。</li>
+<li>审计早期融合对比，在产物不足时把因果表述降级为描述性报告。</li>
+<li>报告传感器融合的初步负结果，并列出证明多模态收益所需的最小控制实验。</li>
+</ol>
+<p>本文只讨论一维 Burgers 基准，不宣称一般融合规律、PDE 求解最优性能或工程级替代能力。</p>
+<h2 id="2-问题与证据基础">2 问题与证据基础</h2>
+<h3 id="21-控制方程">2.1 控制方程</h3>
+<p>基准求解黏性 Burgers 方程</p>
+<p>\[
+\frac{\partial u}{\partial t}+u\frac{\partial u}{\partial x}
+=\nu\frac{\partial^2 u}{\partial x^2},
+\qquad x\in[0,1),\quad t\in[0,1],
+\]</p>
+<p>空间采用周期边界。保存的数据场包含 256 个空间点和 101 个时间点。数据覆盖五个黏性系数 (\nu\in{0.004,0.006,0.008,0.01,0.012}) 和五类初始场：Fourier、混合场、弱高频、弱尖峰和弱台阶。学习目标是近似初值到解的算子</p>
+<p>\[
+\mathcal{G}:u_0(x)\mapsto u(x,t),
+\]</p>
+<p>在多模态情形下近似</p>
+<p>\[
+\mathcal{G}: \left(u_0(x),\,\{(x_i,t_s,u_i)\}_{i=1}^{N}\right)
+\mapsto u(x,t).
+\]</p>
+<p>密集模态是初始场；稀疏模态是在固定空间位置和固定时刻 (t_s) 采样的点值。代码支持 (N&gt;0)，但本文证据最完整的结果使用 (N=0)。这个区别很重要：算子主干已经足以支持配对增强研究，传感器分支仍然处于探索阶段。</p>
+<h3 id="22-数据划分">2.2 数据划分</h3>
+<p>所有保留的三种子比较使用同一套自建 Burgers 数据。原始课程训练集包含 1,408 条轨迹，验证集 128 条，同分布测试集 128 条。训练集主体是 512 条 Fourier 和 512 条混合场，另有 3 类弱课程场各 128 条。测试集由同五个黏性档位下的 Fourier 与混合场组成。数据目录中另有分布外文件，但本文的配对表只使用保存的同分布测试结果，因此不把 OOD 性能写成已验证结论。</p>
+<table>
+<thead>
+<tr>
+<th>数据划分</th>
+<th style="text-align: right;">轨迹数</th>
+<th style="text-align: right;">空间点</th>
+<th style="text-align: right;">时间点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原始训练集</td>
+<td style="text-align: right;">1,408</td>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">101</td>
+</tr>
+<tr>
+<td>平移增强训练集</td>
+<td style="text-align: right;">4,224</td>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">101</td>
+</tr>
+<tr>
+<td>验证集</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">101</td>
+</tr>
+<tr>
+<td>同分布测试集</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">101</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-证据原则">2.3 证据原则</h3>
+<p>本文只保留能够连接到已保存 <code>metrics.json</code>、检查点签名、训练配置或可执行代码路径的数值结论。连接关系间接时，结论降级为观察；产物与结论矛盾时，删除该结论。</p>
+<p>目录名称不能作为架构证据。例如，路径中出现 <code>prefusion</code> 只是标签，不能证明模型执行了独立的预融合计算图。</p>
+<h2 id="3-多模态算子结构">3 多模态算子结构</h2>
+<h3 id="31-输入输出接口">3.1 输入输出接口</h3>
+<p>算子将初始场和可选传感器映射到查询坐标处的值：</p>
+<p>\[
+\hat{u}(x,t)
+=G_\theta\left(u_0,\{(x_i,t_s,u_i)\}_{i=1}^{N}\right)(x,t).
+\]</p>
+<p>训练完成后可以在任意坐标查询输出，不要求先生成固定网格。保留实现使用查询解码器。代码中另有网格解码器，但本文实验未使用。</p>
+<p><img alt="图 1 多模态算子主干" src="publication/assets/architecture_zh.png"></p>
+<p>图 1 场编码、潜空间时间演化、传感器 token 融合、上下文编码与查询解码。只有 <code>--sensor-count</code> 大于 0 时传感器路径才启用。</p>
+<h3 id="32-场编码器">3.2 场编码器</h3>
+<p>初始场先构造高通表示</p>
+<p>\[
+h(u_0)=u_0-\operatorname{smooth}_{15}(u_0),
+\]</p>
+<p>网络输入为 ([u_0,0.5h(u_0)])。两层一维 CNN 生成局部特征，自适应平均池化得到 32 个空间 token，并投影到 64 维。同一初始场通过卷积流形自编码器编码为 32 维潜变量 (z_0)。流形信息通过投影加入 token，另一条流形 CNN 分支提供第二组潜变量派生 token。</p>
+<p>场编码可写为</p>
+<p>\[
+T_f=\operatorname{CNN}([u_0,0.5h(u_0)]),
+\qquad
+z_0=\operatorname{Enc}_{\mathrm{manifold}}(u_0),
+\qquad
+C_f=\Phi_f(T_f,z_0).
+\]</p>
+<p>流形编码器在算子目标优化前单独预训练。保留运行使用 1,500 步预训练。</p>
+<h3 id="33-潜空间时间演化">3.3 潜空间时间演化</h3>
+<p>潜变量通过学习到的向量场演化：</p>
+<p>\[
+\frac{dz}{dt}=v_\theta(z),
+\qquad
+z(t)=z_0+\int_0^t v_\theta(z(s))\,ds.
+\]</p>
+<p>实现采用 4 步显式 Euler 积分。这是一个紧凑的连续时间先验，不是高精度 ODE 求解器。它让解码器获得与查询时刻相关的潜状态，同时避免生成完整网格。</p>
+<h3 id="34-传感器-token-与混合融合">3.4 传感器 token 与混合融合</h3>
+<p>每个传感器输入包含位置、采样时刻和测值。两层 MLP 把三元组投影到 64 维，并加入可学习的传感器类型嵌入：</p>
+<p>\[
+T_s^{(i)}=\operatorname{MLP}([x_i,t_s,u_i])+e_{\mathrm{sensor}}.
+\]</p>
+<p>传感器 token 在上下文 Transformer 之前与场 token、潜变量 token 拼接：</p>
+<p>\[
+C=\Phi_{\mathrm{context}}\left([T_f;T_{z_0};T_s]\right).
+\]</p>
+<p>上下文编码器包含 3 层、4 个注意力头、宽度 64。查询解码器随后对 (C) 做注意力。因此，实现既不是早期叙事中的理想预融合，也不是严格晚期融合，而是早期 token 拼接加后期查询注意力。</p>
+<p>这个区别直接影响解释。把模型称为“晚期融合”会掩盖传感器 token 已进入上下文编码器；称为“早期融合”又会掩盖解码器注意力路径。更准确的名称是混合 token 融合。</p>
+<h3 id="35-查询解码器">3.5 查询解码器</h3>
+<p>给定查询坐标 ((x,t))，解码器构造</p>
+<p>\[
+q(x,t)=\operatorname{MLP}\left[
+\gamma(x,t),\,z(t),\,u_0^{\mathrm{local}}(x)
+\right],
+\]</p>
+<p>其中 (\gamma) 包含 Fourier 坐标特征，(u_0^{\mathrm{local}}) 包含局部场特征。查询通过交叉注意力读取上下文：</p>
+<p>\[
+\tilde{q}(x,t)=\operatorname{Attn}(q,C,C),
+\qquad
+\hat{u}(x,t)=\operatorname{Head}\left(\operatorname{FFN}(\tilde{q})\right).
+\]</p>
+<p>上下文与查询数量解耦，因此评测可以分块处理任意数量的时空坐标。保留评测使用每块 4,096 个查询。</p>
+<h3 id="36-参数规模">3.6 参数规模</h3>
+<p>纯场三 seed 模型包含 336,546 个参数。加入 8 个传感器后为 341,026 个参数。八传感器检查点的参数分解如下。</p>
+<table>
+<thead>
+<tr>
+<th>参数组</th>
+<th style="text-align: right;">参数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>流形编码器</td>
+<td style="text-align: right;">131,633</td>
+</tr>
+<tr>
+<td>上下文编码器</td>
+<td style="text-align: right;">100,416</td>
+</tr>
+<tr>
+<td>流形到 token 投影</td>
+<td style="text-align: right;">33,792</td>
+</tr>
+<tr>
+<td>时间向量场</td>
+<td style="text-align: right;">8,352</td>
+</tr>
+<tr>
+<td>查询投影</td>
+<td style="text-align: right;">9,408</td>
+</tr>
+<tr>
+<td>交叉注意力</td>
+<td style="text-align: right;">16,640</td>
+</tr>
+<tr>
+<td>前馈解码器</td>
+<td style="text-align: right;">16,576</td>
+</tr>
+<tr>
+<td>CNN tokenizer</td>
+<td style="text-align: right;">2,768</td>
+</tr>
+<tr>
+<td>场到 token 投影</td>
+<td style="text-align: right;">2,112</td>
+</tr>
+<tr>
+<td>潜变量到 token 投影</td>
+<td style="text-align: right;">2,112</td>
+</tr>
+<tr>
+<td>流形 CNN 分支</td>
+<td style="text-align: right;">8,320</td>
+</tr>
+<tr>
+<td>传感器 MLP 投影</td>
+<td style="text-align: right;">4,416</td>
+</tr>
+<tr>
+<td>位置与类型嵌入</td>
+<td style="text-align: right;">2,112</td>
+</tr>
+<tr>
+<td>输出头与归一化</td>
+<td style="text-align: right;">2,369</td>
+</tr>
+<tr>
+<td>总计</td>
+<td style="text-align: right;">341,026</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-训练与评价协议">4 训练与评价协议</h2>
+<h3 id="41-严格周期平移增强">4.1 严格周期平移增强</h3>
+<p>空间域是周期的。对任意精确解 (u(x,t))，平移后的场</p>
+<p>\[
+u_\delta(x,t)=u(x-\delta,t)
+\]</p>
+<p>仍然是同一方程、边界条件和黏性系数下的精确解。因此，该增强只改变空间位置覆盖，不改变物理。</p>
+<p>生成脚本从 1,408 条轨迹开始，为每条轨迹额外生成两份完整时空场的随机整数循环平移，位移取 ({1,\ldots,255})。最终每条原始轨迹对应 3 份样本，总数为 4,224。随机数生成器固定，并保存平移量与副本编号元数据。</p>
+<p>与任意幅度缩放或频谱扰动相比，周期平移不会制造非解样本，因此证据更强。但它只适用于周期问题。</p>
+<h3 id="42-目标函数">4.2 目标函数</h3>
+<p>训练目标包含采样点数据损失、初始条件损失、周期边界损失和可选 PDE 残差项。保留的核心运行使用</p>
+<p>\[
+\mathcal{L}
+=\mathcal{L}_{\mathrm{data}}
++\mathcal{L}_{\mathrm{IC}}
++\mathcal{L}_{\mathrm{BC}}
++\lambda_{\mathrm{PDE}}\mathcal{L}_{\mathrm{PDE}},
+\qquad
+\lambda_{\mathrm{PDE}}=0.
+\]</p>
+<p>保留运行的优化目标关闭 PDE 项。验证分数仍使用非零诊断权重：</p>
+<p>\[
+s_{\mathrm{dev}}
+=L_2^{\mathrm{dev}}
++0.1\,\mathrm{PDE}_{\mathrm{RMS}}^{\mathrm{dev}}.
+\]</p>
+<p>启用损失平衡。残差诊断使用名义黏性系数 0.01，而数据实际覆盖多个黏性值。由于 PDE 项在优化中关闭，这不会改变训练目标，但进一步说明残差只能作为粗略的项目内部诊断。更准确的描述是“带物理诊断项的数据驱动算子”，而不是完整的物理信息优化器。</p>
+<h3 id="43-优化配置">4.3 优化配置</h3>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th style="text-align: right;">数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>预设</td>
+<td style="text-align: right;">wide</td>
+</tr>
+<tr>
+<td>训练样本</td>
+<td style="text-align: right;">4,224</td>
+</tr>
+<tr>
+<td>训练步数</td>
+<td style="text-align: right;">24,000</td>
+</tr>
+<tr>
+<td>批大小</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr>
+<td>学习率</td>
+<td style="text-align: right;">1e-3</td>
+</tr>
+<tr>
+<td>预热</td>
+<td style="text-align: right;">200 步</td>
+</tr>
+<tr>
+<td>调度</td>
+<td style="text-align: right;">cosine 衰减到 2%</td>
+</tr>
+<tr>
+<td>Dropout</td>
+<td style="text-align: right;">0.1</td>
+</tr>
+<tr>
+<td>梯度裁剪</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr>
+<td>损失平衡</td>
+<td style="text-align: right;">开启</td>
+</tr>
+<tr>
+<td>训练物理权重</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+<tr>
+<td>验证物理权重</td>
+<td style="text-align: right;">0.1</td>
+</tr>
+<tr>
+<td>随机种子</td>
+<td style="text-align: right;">11、7、23</td>
+</tr>
+</tbody>
+</table>
+<p>测试前恢复最佳验证检查点。三个种子的最佳步数分别为 22,000、20,000 和 18,000。</p>
+<h3 id="44-指标">4.4 指标</h3>
+<p>相对 L2 在整个 (256\times101) 场上计算，再对测试轨迹取平均：</p>
+<p>\[
+L_2^{\mathrm{rel}}
+=\frac{1}{M}\sum_{m=1}^{M}
+\frac{\lVert\hat{u}_m-u_m\rVert_2}
+{\lVert u_m\rVert_2}.
+\]</p>
+<p>PDE 残差在 128 个随机时空查询上通过自动微分计算并取均方根。两个细节限制了解释：查询坐标在评测时随机采样，且残差对所有样本使用名义黏性系数 0.01，而数据覆盖多个黏性值。因此该残差是粗略的项目内部诊断量，不是跨论文标准基准。后续实验应固定并保存评测查询集，并使用每个样本对应的黏性系数。</p>
+<h2 id="5-存档融合对比的审计">5 存档融合对比的审计</h2>
+<h3 id="51-保存配置">5.1 保存配置</h3>
+<p>审计检查以下两条运行：</p>
+<ul>
+<li><code>experiments/outputs_burgers_dataset/custom_v11_multimodal_sensors8_24k</code></li>
+<li><code>experiments/outputs_burgers_dataset/custom_v12_multimodal_prefusion_24k</code></li>
+</ul>
+<p>两份配置均包含 8 个传感器、(t_s=0.5)、模型宽度 64、32 个上下文 token、4 个注意力头、3 层 Transformer、批大小 32、24,000 步、学习率 (10^{-3})、训练物理权重 0.0、验证物理权重 0.1、损失平衡开启、随机种子 11。逐字段比较没有发现配置差异。</p>
+<p>两个检查点均包含 341,026 个参数和 129 个 state-dict 条目，同名张量形状一致。权重数值不同，这与同一计算图在不同初始化或数据顺序下训练两次完全相容。参数签名不能证明存在两种融合机制。</p>
+<h3 id="52-描述性数值">5.2 描述性数值</h3>
+<table>
+<thead>
+<tr>
+<th>测量项</th>
+<th style="text-align: right;">交叉注意力标签运行</th>
+<th style="text-align: right;">预融合标签运行</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>测试相对 L2</td>
+<td style="text-align: right;">0.115319</td>
+<td style="text-align: right;">0.114495</td>
+</tr>
+<tr>
+<td>测试 PDE RMS</td>
+<td style="text-align: right;">1.038709</td>
+<td style="text-align: right;">1.795859</td>
+</tr>
+<tr>
+<td>验证相对 L2</td>
+<td style="text-align: right;">0.128933</td>
+<td style="text-align: right;">0.130875</td>
+</tr>
+<tr>
+<td>训练相对 L2</td>
+<td style="text-align: right;">0.118823</td>
+<td style="text-align: right;">0.121072</td>
+</tr>
+<tr>
+<td>训练时间（秒）</td>
+<td style="text-align: right;">1,597.907</td>
+<td style="text-align: right;">1,374.561</td>
+</tr>
+<tr>
+<td>参数量</td>
+<td style="text-align: right;">341,026</td>
+<td style="text-align: right;">341,026</td>
+</tr>
+</tbody>
+</table>
+<p>测试 L2 差为 0.000824，相对于交叉注意力标签运行低 0.714%。PDE 差为 0.757150，预融合标签运行高 72.89%。训练时间相差 223.346 秒，占较长运行的 13.98%。</p>
+<p>这些是两次存档执行之间的描述性差异，不是融合效应估计。没有多随机种子、置信区间或独立预融合实现。实际耗时还会受到 GPU 占用和主机负载影响。</p>
+<h3 id="53-删除或降级的主张">5.3 删除或降级的主张</h3>
+<table>
+<thead>
+<tr>
+<th>早期说法</th>
+<th>本文状态</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>在受控条件下比较了两种融合机制</td>
+<td>降级</td>
+<td>当前入口没有独立预融合控制</td>
+</tr>
+<tr>
+<td>预融合好 0.71%</td>
+<td>仅描述</td>
+<td>每个标签只有一次运行，无法分离因果</td>
+</tr>
+<tr>
+<td>交叉注意力的 PDE 残差好 42%</td>
+<td>仅描述</td>
+<td>数值存在，但实现归因未解决</td>
+</tr>
+<tr>
+<td>训练时物理权重为 0.1</td>
+<td>删除</td>
+<td>保存的训练值为 0.0，0.1 是验证权重</td>
+</tr>
+<tr>
+<td>学习率为 3e-3</td>
+<td>删除</td>
+<td>保存值为 1e-3</td>
+</tr>
+<tr>
+<td>两种融合路径参数量不同</td>
+<td>删除</td>
+<td>两个检查点均为 341,026 参数且签名一致</td>
+</tr>
+</tbody>
+</table>
+<p>审计并不意味着融合策略不重要，而是说明存档产物无法识别策略效应。后续必须提供显式策略开关、架构清单、匹配预算和重复种子。</p>
+<h2 id="6-结果">6 结果</h2>
+<h3 id="61-周期平移配对实验">6.1 周期平移配对实验</h3>
+<p>配对比较固定模型、数据来源、优化预算和评测划分，只改变训练集：原始 1,408 条轨迹对 4,224 条周期平移轨迹。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">随机种子</th>
+<th style="text-align: right;">原始测试 L2</th>
+<th style="text-align: right;">平移测试 L2</th>
+<th style="text-align: right;">绝对变化</th>
+<th style="text-align: right;">相对变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0.097000</td>
+<td style="text-align: right;">0.090097</td>
+<td style="text-align: right;">-0.006903</td>
+<td style="text-align: right;">-7.12%</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.102857</td>
+<td style="text-align: right;">0.095846</td>
+<td style="text-align: right;">-0.007011</td>
+<td style="text-align: right;">-6.82%</td>
+</tr>
+<tr>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">0.110597</td>
+<td style="text-align: right;">0.105622</td>
+<td style="text-align: right;">-0.004975</td>
+<td style="text-align: right;">-4.50%</td>
+</tr>
+<tr>
+<td style="text-align: right;">平均</td>
+<td style="text-align: right;">0.103485</td>
+<td style="text-align: right;">0.097188</td>
+<td style="text-align: right;">-0.006296</td>
+<td style="text-align: right;">-6.09%</td>
+</tr>
+<tr>
+<td style="text-align: right;">标准差</td>
+<td style="text-align: right;">0.006820</td>
+<td style="text-align: right;">0.007849</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+</tr>
+</tbody>
+</table>
+<p>三个配对运行全部改善。验证集相对 L2 也全部改善：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">随机种子</th>
+<th style="text-align: right;">原始验证 L2</th>
+<th style="text-align: right;">平移验证 L2</th>
+<th style="text-align: right;">相对变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0.109650</td>
+<td style="text-align: right;">0.104754</td>
+<td style="text-align: right;">-4.47%</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.119245</td>
+<td style="text-align: right;">0.109762</td>
+<td style="text-align: right;">-7.95%</td>
+</tr>
+<tr>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">0.126335</td>
+<td style="text-align: right;">0.114474</td>
+<td style="text-align: right;">-9.39%</td>
+</tr>
+</tbody>
+</table>
+<p>平均测试改善为 6.09%，但样本只有三个种子。该结果说明增强在当前基准上可重复，而不是一条普适增强定律。</p>
+<h3 id="62-pde-残差没有一致改善">6.2 PDE 残差没有一致改善</h3>
+<p>平移运行没有一致降低 PDE 残差：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">随机种子</th>
+<th style="text-align: right;">原始测试 PDE RMS</th>
+<th style="text-align: right;">平移测试 PDE RMS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0.838240</td>
+<td style="text-align: right;">0.855308</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">1.354726</td>
+<td style="text-align: right;">1.738279</td>
+</tr>
+<tr>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">1.524887</td>
+<td style="text-align: right;">1.471190</td>
+</tr>
+<tr>
+<td style="text-align: right;">平均</td>
+<td style="text-align: right;">1.239284</td>
+<td style="text-align: right;">1.354926</td>
+</tr>
+</tbody>
+</table>
+<p>平均残差上升约 9.3%，而 L2 误差下降。这是一个有用的负观察。严格平移增强了位置覆盖和场精度，但在当前诊断协议下不保证更低残差。</p>
+<p>差异可能来自多个因素：优化目标不包含 PDE 项，残差在随机坐标采样，检查点由组合验证分数选择。因此，不能把结果表述为“增强提升物理一致性”。</p>
+<h3 id="63-传感器融合初步结果">6.3 传感器融合初步结果</h3>
+<p>一个 seed 11 的初步比较在同样的 1,408 条训练配方上加入 8 个传感器，采样时刻为 (t_s=0.5)。参数量从 336,546 增加到 341,026。</p>
+<table>
+<thead>
+<tr>
+<th>Seed 11</th>
+<th style="text-align: right;">纯场</th>
+<th style="text-align: right;">八传感器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>测试相对 L2</td>
+<td style="text-align: right;">0.097000</td>
+<td style="text-align: right;">0.115319</td>
+</tr>
+<tr>
+<td>测试 PDE RMS</td>
+<td style="text-align: right;">0.838240</td>
+<td style="text-align: right;">1.038709</td>
+</tr>
+<tr>
+<td>参数量</td>
+<td style="text-align: right;">336,546</td>
+<td style="text-align: right;">341,026</td>
+</tr>
+</tbody>
+</table>
+<p>传感器运行在两个记录指标上都更差。这是初步负结果，不是严格融合结论：只有单个种子，传感器运行增加参数，而且损失函数没有跨模态对齐项。它仍然说明“加入信息量更多的测量”不会自动改善算子。</p>
+<p>一个合理解释是传感器分支可能利用固定位置或单一时采样时刻形成捷径。场路径已经包含初始条件，传感器 token 只有在优化目标明确要求跨模态一致性时才会产生稳定收益。仅拼接 token 不会自动创造这种对齐。</p>
+<h3 id="64-训练行为">6.4 训练行为</h3>
+<p>代表性平移运行在第 22,000 步取得最佳验证分数。测试预测如下。</p>
+<p><img alt="图 2 代表性测试预测" src="experiments/outputs_burgers_dataset/custom_v13_shift3_24k/test_prediction.png"></p>
+<p>图 2 seed 11 周期平移纯场模型的代表性测试预测。</p>
+<p><img alt="图 3 训练与验证曲线" src="experiments/outputs_burgers_dataset/custom_v13_shift3_24k/training_curve.png"></p>
+<p>图 3 代表性平移运行的训练历史。</p>
+<p>三个平移运行均完成 24,000 步，最佳检查点分别为 22,000、20,000 和 18,000。纯场模型在调度预算内总体稳定，但最终训练状态未必是最佳测试状态。</p>
+<h2 id="7-缺失融合研究的可复现协议">7 缺失融合研究的可复现协议</h2>
+<h3 id="71-明确研究问题">7.1 明确研究问题</h3>
+<p>下一轮实验应检验一个可证伪问题：</p>
+<blockquote>
+<p>在数据、参数预算、优化预算、评测查询和检查点规则匹配的条件下，独立实现的预融合模型是否与当前混合 token 融合模型在预测误差和 PDE 残差的联合分布上存在差异？</p>
+</blockquote>
+<p>问题不应预设某一方胜出。区间重叠或结果不确定同样具有科学价值。</p>
+<h3 id="72-必需实现">7.2 必需实现</h3>
+<p>至少比较四类系统：</p>
+<ol>
+<li>纯场基线。</li>
+<li>使用共享联合编码器的早期特征融合。</li>
+<li>使用模态专用编码器的表征级注意力融合。</li>
+<li>当前混合 token 融合。</li>
+</ol>
+<p>每个实现都需要独立单元测试前向路径。测试应覆盖 token 数量、张量形状、梯度流，以及纯场路径中不存在传感器信息泄漏。</p>
+<h3 id="73-架构指纹">7.3 架构指纹</h3>
+<p>每次运行至少保存：</p>
+<ul>
+<li>融合模式和实现标识；</li>
+<li>模块类列表；</li>
+<li>参数量；</li>
+<li>参数形状哈希；</li>
+<li>源代码哈希或提交号；</li>
+<li>完整训练目标和实际损失权重调度；</li>
+<li>数据划分哈希；</li>
+<li>检查点选择规则；</li>
+<li>评测查询种子。</li>
+</ul>
+<p>目录名称本身不足以证明来源。</p>
+<h3 id="74-实验矩阵">7.4 实验矩阵</h3>
+<table>
+<thead>
+<tr>
+<th>因素</th>
+<th>最低设置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>传感器数量</td>
+<td>0、4、8、16</td>
+</tr>
+<tr>
+<td>采样时刻</td>
+<td>0.2、0.5、0.8</td>
+</tr>
+<tr>
+<td>随机种子</td>
+<td>至少 5 个配对种子</td>
+</tr>
+<tr>
+<td>预算</td>
+<td>匹配步数，并单独设置匹配实际耗时组</td>
+</tr>
+<tr>
+<td>损失</td>
+<td>固定主权重，并报告敏感性分析</td>
+</tr>
+<tr>
+<td>指标</td>
+<td>相对 L2、固定查询 PDE RMS、逐时刻误差、谱误差</td>
+</tr>
+<tr>
+<td>报告</td>
+<td>均值、标准差、配对差异、bootstrap 区间</td>
+</tr>
+</tbody>
+</table>
+<p>只有架构指纹和纯场控制通过后，才应运行完整传感器矩阵。</p>
+<h3 id="75-多模态对齐目标">7.5 多模态对齐目标</h3>
+<p>直接拼接不足以保证有效融合。一个最小对齐目标是</p>
+<p>\[
+\mathcal{L}_{\mathrm{align}}
+=\sum_i\lVert\hat{u}(x_i,t_s)-u_i\rVert^2
++\lVert\hat{u}_{\mathrm{field+sensor}}
+-\hat{u}_{\mathrm{field-only}}\rVert^2.
+\]</p>
+<p>第一项要求场预测解释测点，第二项鼓励两条路径在应当一致的区域给出一致预测。训练时应使用模态丢弃，保证纯场路径仍然是有效回退。</p>
+<h2 id="8-局限性">8 局限性</h2>
+<p>本文有六方面限制。</p>
+<p>第一，只评价一个 PDE、一个空间分辨率和一个边界条件。数据覆盖五个黏性系数，而不是单一系数。周期平移只对周期场严格成立，不能直接迁移到非周期问题。</p>
+<p>第二，正面增强结果使用三个配对随机种子。这足以说明当前基准上的重复改善，但不足以估计总体效应或支持小效应显著性结论。</p>
+<p>第三，PDE 残差使用随机查询和名义黏性系数诊断，其平均值与场误差变化方向相反。后续评测应保存固定查询集，使用样本对应的真实系数，并报告残差定义和归一化。</p>
+<p>第四，传感器分支只测试一个种子，且没有对齐损失。负结果具有工程警示价值，但不是最终融合比较。</p>
+<p>第五，存档融合运行缺少独立预融合实现和源代码提交。数值差异可以作为历史观察，但不能作为因果证据。</p>
+<p>第六，模型不是数值求解器的工程替代。保留配置约 33.7 万参数，在现有硬件上训练约 47 至 52 分钟。它是用于受控算子学习实验的研究原型。</p>
+<h2 id="9-结论">9 结论</h2>
+<p>本文把多模态算子项目已经证明的内容与仅仅提出过的内容分开。</p>
+<p>已证明的是一条严格周期平移增强效应。三个配对运行的平均测试相对 L2 改善 6.09%，三个种子全部改善；增强精确保持 PDE 不变，因此可以较清楚地解释为位置覆盖收益。PDE 残差没有一致改善，所以结论应限定为精度与数据覆盖。</p>
+<p>多模态收益尚未得到证明。直接传感器 token 在保留试验中增加误差，早期交叉注意力与预融合对比也无法归因，因为保存的配置和参数签名不能识别两套独立机制。下一步不应继续更换架构标签，而应保存可执行架构指纹，使用配对随机种子、固定评测查询和跨模态对齐目标。</p>
+<p>更一般的启示是：当控制方程已知时，精确对称性可以提供可靠的数据增强；增加一种模态并不自动带来更好的算子。在多模态科学机器学习中，模态交互的证据必须和架构图一样明确。</p>
+<h2 id="数据与代码可用性">数据与代码可用性</h2>
+<p>本文使用工作区中的以下保留产物：</p>
+<ul>
+<li><code>code/demo_burgers_dataset.py</code></li>
+<li><code>code/make_custom_shift_augment.py</code></li>
+<li><code>datasets/burgers_custom_v1/</code></li>
+<li><code>experiments/outputs_burgers_dataset/custom_v7_hp05_24k*</code></li>
+<li><code>experiments/outputs_burgers_dataset/custom_v13_shift3_24k*</code></li>
+<li><code>experiments/outputs_burgers_dataset/custom_v11_multimodal_sensors8_24k/</code></li>
+<li><code>experiments/outputs_burgers_dataset/custom_v12_multimodal_prefusion_24k/</code></li>
+</ul>
+<p>正式发布时应提供数据文件校验和、全部保留指标、训练命令行、环境锁文件和架构清单。</p>
+<h2 id="参考文献">参考文献</h2>
+<p>[1] Z. Li, N. Kovachki, K. Azizzadenesheli, B. Liu, K. Bhattacharya, A. Stuart, and A. Anandkumar. Fourier Neural Operator for Parametric Partial Differential Equations. International Conference on Learning Representations, 2021.</p>
+<p>[2] L. Lu, P. Jin, G. Pang, Z. Zhang, and G. E. Karniadakis. Learning Nonlinear Operators via DeepONet Based on the Universal Approximation Theorem of Operators. Nature Machine Intelligence, 3:218-229, 2021.</p>
+<p>[3] N. Kovachki, Z. Li, B. Liu, K. Azizzadenesheli, K. Bhattacharya, A. Stuart, and A. Anandkumar. Neural Operator: Learning Maps Between Function Spaces with Applications to PDEs. Journal of Machine Learning Research, 24(89):1-97, 2023.</p>
+<p>[4] M. Takamoto, T. Praditia, R. Leiteritz, D. MacKinlay, F. Alesiani, D. Pfluger, and M. Niepert. PDEBench: An Extensive Benchmark for Scientific Machine Learning. NeurIPS Datasets and Benchmarks Track, 2022.</p>
+<p>[5] M. Raissi, P. Perdikaris, and G. E. Karniadakis. Physics-Informed Neural Networks: A Deep Learning Framework for Solving Forward and Inverse Problems Involving Nonlinear Partial Differential Equations. Journal of Computational Physics, 378:686-707, 2019.</p>
+<p>[6] S. Wang, H. Wang, and P. Perdikaris. Learning the Solution Operator of Parametric Partial Differential Equations with Physics-Informed DeepONets. Science Advances, 7(40):eabi8605, 2021.</p>
+<p>[7] A. Baltrušaitis, C. Ahuja, and L.-P. Morency. Multimodal Machine Learning: A Survey and Taxonomy. IEEE Transactions on Pattern Analysis and Machine Intelligence, 41(2):423-443, 2019.</p>
+<p>[8] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, L. Kaiser, and I. Polosukhin. Attention Is All You Need. Advances in Neural Information Processing Systems, 2017.</p>
+<p>[9] A. Krishnapriyan, A. Gholami, S. Zhe, R. Kirby, and M. W. Mahoney. Characterizing Possible Failure Modes in Physics-Informed Neural Networks. Advances in Neural Information Processing Systems, 2021.</p>
+<p>[10] J. Pineau, P. Vincent-Lamarre, K. Sinha, V. Lariviere, A. Beygelzimer, F. d'Alche-Buc, E. Fox, and H. Larochelle. Improving Reproducibility in Machine Learning Research. Journal of Machine Learning Research, 22(164):1-20, 2021.</p>
+<p>[11] B. Efron and R. J. Tibshirani. An Introduction to the Bootstrap. Chapman and Hall/CRC, 1993.</p>
+<h2 id="附录-a-运行来源">附录 A 运行来源</h2>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>目录</th>
+<th style="text-align: right;">种子</th>
+<th style="text-align: right;">训练样本</th>
+<th style="text-align: right;">参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原始增强对照</td>
+<td><code>custom_v7_hp05_24k</code></td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">1,408</td>
+<td style="text-align: right;">336,546</td>
+</tr>
+<tr>
+<td>原始增强对照</td>
+<td><code>custom_v7_hp05_24k_seed7</code></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">1,408</td>
+<td style="text-align: right;">336,546</td>
+</tr>
+<tr>
+<td>原始增强对照</td>
+<td><code>custom_v7_hp05_24k_seed23</code></td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">1,408</td>
+<td style="text-align: right;">336,546</td>
+</tr>
+<tr>
+<td>周期平移运行</td>
+<td><code>custom_v13_shift3_24k</code></td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">4,224</td>
+<td style="text-align: right;">336,546</td>
+</tr>
+<tr>
+<td>周期平移运行</td>
+<td><code>custom_v13_shift3_24k_seed7</code></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">4,224</td>
+<td style="text-align: right;">336,546</td>
+</tr>
+<tr>
+<td>周期平移运行</td>
+<td><code>custom_v13_shift3_24k_seed23</code></td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">4,224</td>
+<td style="text-align: right;">336,546</td>
+</tr>
+<tr>
+<td>八传感器试验</td>
+<td><code>custom_v11_multimodal_sensors8_24k</code></td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">1,408</td>
+<td style="text-align: right;">341,026</td>
+</tr>
+<tr>
+<td>存档融合标签</td>
+<td><code>custom_v12_multimodal_prefusion_24k</code></td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">1,408</td>
+<td style="text-align: right;">341,026</td>
+</tr>
+</tbody>
+</table>
+<h2 id="附录-b-最低报告清单">附录 B 最低报告清单</h2>
+<ul>
+<li>☐ 每次运行记录融合模式和实现标识</li>
+<li>☐ 保存架构清单与参数形状哈希</li>
+<li>☐ 保留源代码提交或代码哈希</li>
+<li>☐ 记录完整训练目标及实际损失权重调度</li>
+<li>☐ 保留数据划分哈希</li>
+<li>☐ 统一应用检查点选择规则</li>
+<li>☐ 保存固定 PDE 诊断查询集</li>
+<li>☐ 比较性结论至少使用 5 个配对随机种子</li>
+<li>☐ 报告均值、标准差和配对不确定性</li>
+<li>☐ 在分析中纳入失败和非有限值运行</li>
+<li>☐ 包含纯场基线</li>
+<li>☐ 报告负结果和不确定结果</li>
+</ul>
+</main>
+</body>
+</html>

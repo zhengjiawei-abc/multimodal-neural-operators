@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="Project author information to be completed">
+<meta name="description" content="A 128-Wide Four-Layer Multimodal Neural Operator for the Burgers Equation">
+<title>A 128-Wide Four-Layer Multimodal Neural Operator for the Burgers Equation</title>
+<base href="file:///C:/Users/%E9%83%91%E7%82%9C%E9%94%8B/Desktop/pinn_hybrid_demo_20261001/">
+<style>
+@font-face {
+  font-family: "DocumentSans";
+  src: url("file:///C:/Windows/Fonts/NotoSansSC-VF.ttf") format("truetype");
+  font-weight: 100 900;
+}
+@font-face {
+  font-family: "DocumentSerif";
+  src: url("file:///C:/Windows/Fonts/NotoSerifSC-VF.ttf") format("truetype");
+  font-weight: 100 900;
+}
+@page { size: A4; margin: 22mm 19mm 20mm 19mm; }
+@page :first { margin: 0; }
+* { box-sizing: border-box; }
+html { color-scheme: light; }
+body {
+  margin: 0;
+  color: #202124;
+  background: #fff;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 10.4pt;
+  line-height: 1.78;
+}
+p { margin: 0 0 7pt; text-align: justify; orphans: 3; widows: 3; }
+strong { color: #111; font-weight: 700; }
+a { color: #355f73; text-decoration: none; }
+ul, ol { margin: 6pt 0 10pt; padding-left: 20pt; }
+li { margin: 2.8pt 0; }
+hr { display: none; }
+.cover {
+  width: 210mm;
+  height: 297mm;
+  padding: 26mm 24mm 22mm;
+  background: #fff;
+  color: #202124;
+  break-after: page;
+  display: flex;
+  flex-direction: column;
+}
+.cover-header {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 3.5mm;
+  border-top: 1mm solid #202124;
+  color: #61666c;
+  font-family: "DocumentSans", "Microsoft YaHei", sans-serif;
+  font-size: 7.7pt;
+  letter-spacing: .12em;
+}
+.cover-main { margin-top: 52mm; max-width: 160mm; }
+.cover-overline {
+  margin: 0 0 8mm;
+  color: #7b3341;
+  font-family: "DocumentSans", "Microsoft YaHei", sans-serif;
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-align: left;
+}
+.cover h1 {
+  margin: 0;
+  color: #17191c;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 30pt;
+  font-weight: 650;
+  line-height: 1.26;
+  text-align: left;
+}
+.cover-subtitle {
+  margin: 9mm 0 0;
+  padding-left: 5mm;
+  border-left: 1.1mm solid #7b3341;
+  color: #4c5157;
+  font-family: "DocumentSans", "Microsoft YaHei", sans-serif;
+  font-size: 14pt;
+  font-weight: 400;
+  line-height: 1.55;
+  text-align: left;
+}
+.cover-rule {
+  height: 0;
+  margin: 13mm 0 5mm;
+  border-top: .35mm solid #c8ccd0;
+}
+.cover-summary {
+  margin: 0;
+  color: #666b71;
+  font-family: "DocumentSans", "Microsoft YaHei", sans-serif;
+  font-size: 8.4pt;
+  letter-spacing: .06em;
+  line-height: 1.7;
+  text-align: left;
+}
+.cover-footer {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 18mm;
+  align-items: end;
+  padding-top: 5mm;
+  border-top: .35mm solid #c8ccd0;
+}
+.cover-project span, .cover-meta span {
+  display: block;
+  margin-bottom: 2mm;
+  color: #7a7f84;
+  font-family: "DocumentSans", "Microsoft YaHei", sans-serif;
+  font-size: 7.3pt;
+  letter-spacing: .08em;
+}
+.cover-project strong, .cover-meta strong {
+  display: block;
+  color: #22262a;
+  font-family: "DocumentSans", "Microsoft YaHei", sans-serif;
+  font-size: 9.5pt;
+  font-weight: 500;
+}
+.toc-shell {
+  min-height: 240mm;
+  break-after: page;
+  counter-reset: tocitem;
+}
+.toc-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12mm;
+  padding-bottom: 3.5mm;
+  border-bottom: .35mm solid #202124;
+}
+.section-kicker {
+  margin: 0;
+  color: #7b3341;
+  font-family: "DocumentSans", "Microsoft YaHei", sans-serif;
+  font-size: 7.8pt;
+  font-weight: 700;
+  letter-spacing: .13em;
+}
+.toc-head h2 {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font-size: 23pt;
+}
+.toc-shell ul { list-style: none; margin: 0; padding: 0; }
+.toc-shell > ul > li {
+  counter-increment: tocitem;
+  padding: 3.3mm 0;
+  border-bottom: .22mm solid #d9dce0;
+}
+.toc-shell > ul > li > a::before {
+  content: counter(tocitem, decimal-leading-zero);
+  display: inline-block;
+  width: 11mm;
+  color: #7b3341;
+  font-family: "DocumentSans", "Microsoft YaHei", sans-serif;
+  font-size: 8pt;
+  letter-spacing: .08em;
+}
+.toc-shell ul ul { display: none; }
+.toc-shell a { color: #202124; font-weight: 600; }
+.content > h2:first-child { margin-top: 0; }
+h1, h2, h3, h4 { break-after: avoid; }
+h1 {
+  margin: 0 0 8mm;
+  color: #17191c;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 23pt;
+  line-height: 1.3;
+}
+h2 {
+  margin: 13mm 0 6mm;
+  color: #17191c;
+  font-family: "DocumentSerif", "SimSun", serif;
+  font-size: 18pt;
+  font-weight: 650;
+  line-height: 1.35;
+}
+h3 {
+  margin: 8mm 0 3.5mm;
+  padding-left: 3mm;
+  border-left: .8mm solid #7b3341;
+  color: #23272b;
+  font-family: "DocumentSans", "Microsoft YaHei", sans-serif;
+  font-size: 12pt;
+  font-weight: 650;
+  line-height: 1.45;
+}
+h4 {
+  margin: 6mm 0 2.5mm;
+  color: #3f4449;
+  font-family: "DocumentSans", "Microsoft YaHei", sans-serif;
+  font-size: 10.6pt;
+}
+code {
+  padding: .6pt 2.2pt;
+  border: .18mm solid #d7dadd;
+  border-radius: 1.5pt;
+  background: #f7f7f8;
+  color: #6f2a37;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 8.3pt;
+  overflow-wrap: anywhere;
+}
+pre {
+  margin: 4mm 0 6mm;
+  padding: 4mm 4.5mm;
+  border: .22mm solid #d7dadd;
+  border-left: 1mm solid #8a8f94;
+  background: #f8f8f9;
+  color: #25292d;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 7.9pt;
+  line-height: 1.52;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  break-inside: avoid;
+}
+pre code { padding: 0; border: 0; background: transparent; color: inherit; }
+.codehilite { margin: 4mm 0 6mm; break-inside: avoid; }
+.codehilite pre { margin: 0; }
+table {
+  width: 100%;
+  margin: 4mm 0 6mm;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-family: "DocumentSans", "Microsoft YaHei", sans-serif;
+  font-size: 8.3pt;
+  line-height: 1.5;
+}
+thead { display: table-header-group; }
+tr { break-inside: avoid; }
+th {
+  padding: 2.2mm 2mm;
+  color: #202124;
+  background: #e9ecee;
+  border: .2mm solid #c7ccd1;
+  font-weight: 700;
+  text-align: left;
+  vertical-align: middle;
+}
+td {
+  padding: 2mm;
+  border: .2mm solid #d8dcdf;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+tbody tr:nth-child(even) td { background: #fafafa; }
+blockquote {
+  margin: 4.5mm 0;
+  padding: 3.5mm 4.5mm;
+  border-left: .8mm solid #8d9195;
+  background: #f8f8f8;
+  color: #484d52;
+}
+img { display: block; max-width: 100%; margin: 5mm auto; }
+mjx-container[display="true"] { margin: 4mm 0 !important; }
+</style>
+
+<script>
+window.MathJax = {
+  tex: {inlineMath: [["\\(", "\\)"], ["$", "$"]],
+        displayMath: [["\\[", "\\]"], ["$$", "$$"]]},
+  svg: {fontCache: "global"},
+  startup: {typeset: false}
+};
+window.__mathjaxLoaded = false;
+window.__mathjaxFailed = false;
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+  onload="window.__mathjaxLoaded = true"
+  onerror="window.__mathjaxFailed = true"></script>
+
+</head>
+<body>
+<section class="cover">
+  <header class="cover-header">
+    <div>MULTIMODAL NEURAL OPERATOR</div>
+    <div>Research manuscript, preprint draft</div>
+  </header>
+  <main class="cover-main">
+    <p class="cover-overline">RESEARCH DOCUMENT</p>
+    <h1>A 128-Wide Four-Layer Multimodal Neural Operator for the Burgers Equation</h1>
+    <p class="cover-subtitle">Current XL architecture, verified results, and evidence boundaries</p>
+    <div class="cover-rule"></div>
+    <p class="cover-summary">BURGERS EQUATION · OPERATOR LEARNING · REPRODUCIBILITY</p>
+  </main>
+  <footer class="cover-footer">
+    <div class="cover-project">
+      <span>PROJECT</span>
+      <strong>Multimodal Neural Operator Study</strong>
+    </div>
+    <div class="cover-meta">
+      <div><span>DATE</span><strong>9 November 2026</strong></div>
+      <div><span>AUTHOR</span><strong>Project author information to be completed</strong></div>
+    </div>
+  </footer>
+</section>
+<nav class="toc-shell">
+  <div class="toc-head">
+    <p class="section-kicker">CONTENTS</p>
+    <h2>Contents</h2>
+  </div>
+  <div class="toc">
+<ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#1-introduction">1 Introduction</a></li>
+<li><a href="#2-problem-setting">2 Problem Setting</a></li>
+<li><a href="#3-current-xl-model">3 Current XL Model</a></li>
+<li><a href="#4-data-augmentation-and-training">4 Data, Augmentation, and Training</a></li>
+<li><a href="#5-results">5 Results</a></li>
+<li><a href="#6-reproducibility-and-evidence-boundaries">6 Reproducibility and Evidence Boundaries</a></li>
+<li><a href="#7-conclusion">7 Conclusion</a></li>
+<li><a href="#data-and-code-availability">Data and Code Availability</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
+
+</nav>
+<main class="content"><h2 id="abstract">Abstract</h2>
+<p>This paper documents the current XL multimodal neural operator rather than the earlier 64-wide, three-layer prototype. The current model uses an MLP manifold encoder, a CNN tokenizer, eight fixed-time sensor tokens, a four-layer 128-wide Transformer context encoder, and a query decoder with cross-attention. It contains 874,209 parameters. Training uses <code>burgers_augmented_v1</code>, with 2,956 training trajectories, 633 development trajectories, and 635 test trajectories. The saved evaluation configuration computes the reported metrics on the first 32 trajectories.</p>
+<p>In the archived seed-42 run, the best development checkpoint occurs at step 22,000. Training completes 24,000 steps in 1,606.96 seconds. The reported test relative L2 is 0.2461 and the test PDE RMS is 0.001059. Relative to the legacy v11 reference, PDE residual decreases by 99.9%, while test L2 increases from 0.1153 to 0.2461. The two runs use different data and architectures, so this is a descriptive tradeoff rather than a causal architecture comparison.</p>
+<p>The paper also corrects two stale claims in earlier project documents. First, the current model is not the <code>d=64</code>, three-layer, 336,546-parameter prototype; it is the <code>d=128</code>, four-layer, 874,209-parameter XL model. Second, the actual augmented training split contains 2,956 trajectories rather than 4.2k, and the reported test metric uses 32 evaluated trajectories rather than all 635.</p>
+<p><strong>Keywords</strong>: neural operator; multimodal learning; Burgers equation; cross-attention; physics-informed learning; reproducibility</p>
+<h2 id="1-introduction">1 Introduction</h2>
+<p>Neural operators learn mappings between function spaces and can predict solutions at arbitrary space-time coordinates [1-4]. The present system additionally receives sparse sensor observations and applies a PDE residual objective, combining multimodal conditioning with physics-informed training. Earlier prototypes established the field encoder, latent manifold representation, and attention context. The current XL model increases width from 64 to 128, increases the context encoder from three to four layers, and uses eight sensors explicitly.</p>
+<p>Project documents contain several historical configurations and conflicting metric summaries. To prevent legacy model details from being presented as the current method, this paper treats the saved <code>experiments/v_aug3x_xl_d128_l4/metrics.json</code> and its configuration as the primary evidence source. When a secondary summary conflicts with the saved artifact, the artifact takes precedence and the discrepancy is stated explicitly.</p>
+<p>The contributions are fourfold:</p>
+<ol>
+<li>A precise specification of the current XL multimodal operator and its parameter composition.</li>
+<li>A report of the seed-42 metrics, training history, checkpoint rule, and runtime.</li>
+<li>A preliminary sensitivity comparison involving physics weight and dropout.</li>
+<li>A correction of stale architecture, dataset-size, and evaluation-size claims.</li>
+</ol>
+<p>The paper does not claim that the current model dominates the legacy baseline on every metric. The evidence supports a tradeoff between field accuracy and PDE residual.</p>
+<h2 id="2-problem-setting">2 Problem Setting</h2>
+<p>The one-dimensional viscous Burgers equation is</p>
+<p>\[
+\frac{\partial u}{\partial t}
++u\frac{\partial u}{\partial x}
+=\nu\frac{\partial^2 u}{\partial x^2},
+\qquad x\in[0,1),\quad t\in[0,1],
+\]</p>
+<p>with periodic spatial boundaries. The stored fields contain 256 spatial points and 101 time points. The model receives an initial field (u_0(x)) and eight sensor observations sampled at (t_s=0.5). It predicts the solution at arbitrary query coordinates:</p>
+<p>\[
+\hat{u}(x,t)
+=G_\theta\left(u_0,\{(x_i,t_s,u_i)\}_{i=1}^{8}\right)(x,t).
+\]</p>
+<p>The saved configuration records (\nu=0.01). The main data directory is <code>datasets/burgers_augmented_v1</code>.</p>
+<h2 id="3-current-xl-model">3 Current XL Model</h2>
+<h3 id="31-overview">3.1 Overview</h3>
+<p><img alt="Figure 1. Current XL multimodal neural operator" src="publication/assets/xl_architecture_en.png"></p>
+<p>Figure 1. Current XL model. The paths comprise an MLP manifold encoder, a CNN tokenizer, sensor tokens, a four-layer 128-wide Transformer context encoder, and a query decoder with cross-attention.</p>
+<h3 id="32-field-encoder-and-manifold-branch">3.2 Field encoder and manifold branch</h3>
+<p>The current configuration disables the input high-pass branch and the manifold CNN branch. A two-layer one-dimensional CNN tokenizer first produces local features, which are adaptively pooled to 32 positions and projected to width 128:</p>
+<p>\[
+T_f=\operatorname{Tokenize}(u_0),
+\qquad
+T_f\in\mathbb{R}^{32\times128}.
+\]</p>
+<p>The initial field is also encoded by an MLP manifold autoencoder into a 32-dimensional latent state:</p>
+<p>\[
+z_0=\operatorname{Enc}_{\mathrm{MLP}}(u_0),
+\qquad
+z_0\in\mathbb{R}^{32}.
+\]</p>
+<p>The latent projection is added to the field tokens. The current run uses <code>latent_ode=False</code>, so there is no latent-space time integration. The query decoder reads the static latent state (z_0). This differs from the earlier prototype architecture.</p>
+<h3 id="33-sensor-tokens">3.3 Sensor tokens</h3>
+<p>Each of the eight sensors is represented by position, sampling time, and value. A two-layer MLP projects the triple to width 128 and adds a learned type embedding:</p>
+<p>\[
+T_s^{(i)}
+=\operatorname{MLP}([x_i,0.5,u_i])+e_{\mathrm{sensor}},
+\qquad i=1,\ldots,8.
+\]</p>
+<p>Sensor tokens are concatenated with field tokens before the context encoder. The current implementation uses fixed equispaced positions and a single sampling time.</p>
+<h3 id="34-context-encoder">3.4 Context encoder</h3>
+<p>The context encoder is a four-layer Transformer with four heads and width 128:</p>
+<p>\[
+C=\Phi_{\mathrm{context}}
+\left([T_f;T_{z_0};T_s]\right).
+\]</p>
+<p>This is hybrid token fusion: token-level concatenation followed by query-level attention.</p>
+<h3 id="35-query-decoder">3.5 Query decoder</h3>
+<p>The query vector combines Fourier coordinate features, the static latent state, and local initial-field features:</p>
+<p>\[
+q(x,t)=\operatorname{MLP}
+\left[
+\gamma(x,t),z_0,u_0^{\mathrm{local}}(x)
+\right].
+\]</p>
+<p>The query attends to the context and is passed through a feed-forward block and output head:</p>
+<p>\[
+\tilde{q}(x,t)=\operatorname{Attn}(q,C,C),
+\qquad
+\hat{u}(x,t)=\operatorname{Head}(\operatorname{FFN}(\tilde{q})).
+\]</p>
+<p>Evaluation processes full-field queries in chunks of 4,096 points.</p>
+<h3 id="36-parameter-scale">3.6 Parameter scale</h3>
+<p>The current XL model contains 874,209 parameters.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter group</th>
+<th style="text-align: right;">Parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Context Transformer</td>
+<td style="text-align: right;">529,920</td>
+</tr>
+<tr>
+<td>MLP manifold encoder</td>
+<td style="text-align: right;">148,256</td>
+</tr>
+<tr>
+<td>Cross-attention</td>
+<td style="text-align: right;">66,048</td>
+</tr>
+<tr>
+<td>Feed-forward block</td>
+<td style="text-align: right;">65,920</td>
+</tr>
+<tr>
+<td>Query projection</td>
+<td style="text-align: right;">27,008</td>
+</tr>
+<tr>
+<td>Sensor projection</td>
+<td style="text-align: right;">17,024</td>
+</tr>
+<tr>
+<td>Tokenizer and token projections</td>
+<td style="text-align: right;">11,136</td>
+</tr>
+<tr>
+<td>Normalization and output head</td>
+<td style="text-align: right;">4,673</td>
+</tr>
+<tr>
+<td>Embedding parameters</td>
+<td style="text-align: right;">4,224</td>
+</tr>
+<tr>
+<td>Total</td>
+<td style="text-align: right;">874,209</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Figure 2. XL parameter composition" src="publication/assets/xl_parameter_breakdown_en.png"></p>
+<p>Figure 2. Parameter composition of the current XL model.</p>
+<h2 id="4-data-augmentation-and-training">4 Data, Augmentation, and Training</h2>
+<h3 id="41-saved-split-sizes">4.1 Saved split sizes</h3>
+<table>
+<thead>
+<tr>
+<th>Split</th>
+<th>File</th>
+<th style="text-align: right;">Trajectories</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Training</td>
+<td><code>burgers_augmented_train.npz</code></td>
+<td style="text-align: right;">2,956</td>
+</tr>
+<tr>
+<td>Development</td>
+<td><code>burgers_augmented_dev.npz</code></td>
+<td style="text-align: right;">633</td>
+</tr>
+<tr>
+<td>Test</td>
+<td><code>burgers_augmented_test.npz</code></td>
+<td style="text-align: right;">635</td>
+</tr>
+</tbody>
+</table>
+<p>Although the test file contains 635 trajectories, <code>eval_samples=32</code>. The reported train, development, and test metrics therefore use the first 32 trajectories. The paper does not claim that 635 trajectories were evaluated.</p>
+<h3 id="42-augmentation">4.2 Augmentation</h3>
+<p><code>burgers_augmented_v1</code> combines spatial flips, periodic rolls, time-window interpolation, amplitude scaling, small noise, and partial time reversal.</p>
+<p>Periodic rolling is an exact symmetry for periodic Burgers data. Spatial flips, amplitude scaling, time reversal, and time-window interpolation alter the governing equation or the physical interpretation of a solution. They are heuristic perturbations, not exact PDE-preserving transformations. The data are therefore described as a mixed augmented set.</p>
+<h3 id="43-objective">4.3 Objective</h3>
+<p>The objective combines data, initial-condition, periodic-boundary, and PDE residual losses:</p>
+<p>\[
+\mathcal{L}
+=\mathcal{L}_{\mathrm{data}}
++\mathcal{L}_{\mathrm{IC}}
++\mathcal{L}_{\mathrm{BC}}
++\lambda_{\mathrm{PDE}}\mathcal{L}_{\mathrm{PDE}},
+\qquad
+\lambda_{\mathrm{PDE}}=0.1.
+\]</p>
+<p>The development score is</p>
+<p>\[
+s_{\mathrm{dev}}
+=L_2^{\mathrm{dev}}
++0.1\,\mathrm{PDE}_{\mathrm{RMS}}^{\mathrm{dev}}.
+\]</p>
+<h3 id="44-optimization">4.4 Optimization</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th style="text-align: right;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Preset</td>
+<td style="text-align: right;">wide</td>
+</tr>
+<tr>
+<td><code>d_model</code></td>
+<td style="text-align: right;">128</td>
+</tr>
+<tr>
+<td><code>n_layers</code></td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td><code>n_heads</code></td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td>Field tokens</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr>
+<td>Latent dimension</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr>
+<td>Manifold hidden</td>
+<td style="text-align: right;">256</td>
+</tr>
+<tr>
+<td>Sensors</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr>
+<td>Batch size</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr>
+<td>Steps</td>
+<td style="text-align: right;">24,000</td>
+</tr>
+<tr>
+<td>Learning rate</td>
+<td style="text-align: right;">1e-3</td>
+</tr>
+<tr>
+<td>LR decay steps</td>
+<td style="text-align: right;">12,000</td>
+</tr>
+<tr>
+<td>Warmup</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Optimizer</td>
+<td style="text-align: right;">AdamW</td>
+</tr>
+<tr>
+<td>Weight decay</td>
+<td style="text-align: right;">1e-4</td>
+</tr>
+<tr>
+<td>Dropout</td>
+<td style="text-align: right;">0.1</td>
+</tr>
+<tr>
+<td>Physics weight</td>
+<td style="text-align: right;">0.1</td>
+</tr>
+<tr>
+<td>Validation physics weight</td>
+<td style="text-align: right;">0.1</td>
+</tr>
+<tr>
+<td>Gradient clip</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr>
+<td>Evaluation interval</td>
+<td style="text-align: right;">500</td>
+</tr>
+<tr>
+<td>Early-stop patience</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td>Early-stop minimum fraction</td>
+<td style="text-align: right;">0.75</td>
+</tr>
+<tr>
+<td>Seed</td>
+<td style="text-align: right;">42</td>
+</tr>
+</tbody>
+</table>
+<p>The learning rate reaches its minimum ratio at step 12,000 while training continues to 24,000. The best development checkpoint occurs at step 22,000.</p>
+<h3 id="45-metrics">4.5 Metrics</h3>
+<p>Relative L2 is</p>
+<p>\[
+L_2^{\mathrm{rel}}
+=\frac{1}{M}\sum_{m=1}^{M}
+\frac{\lVert\hat{u}_m-u_m\rVert_2}
+{\lVert u_m\rVert_2}.
+\]</p>
+<p>PDE RMS is computed by automatic differentiation on sampled queries. Because the evaluation samples and query set must be fixed for strict comparison, it is treated as a project-internal diagnostic.</p>
+<h2 id="5-results">5 Results</h2>
+<h3 id="51-main-run">5.1 Main run</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align: right;">Saved value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parameters</td>
+<td style="text-align: right;">874,209</td>
+</tr>
+<tr>
+<td>Training relative L2</td>
+<td style="text-align: right;">0.201059</td>
+</tr>
+<tr>
+<td>Development relative L2</td>
+<td style="text-align: right;">0.241361</td>
+</tr>
+<tr>
+<td>Test relative L2</td>
+<td style="text-align: right;">0.246087</td>
+</tr>
+<tr>
+<td>Test PDE RMS</td>
+<td style="text-align: right;">0.001059</td>
+</tr>
+<tr>
+<td>Best development step</td>
+<td style="text-align: right;">22,000</td>
+</tr>
+<tr>
+<td>Completed steps</td>
+<td style="text-align: right;">24,000</td>
+</tr>
+<tr>
+<td>Training time</td>
+<td style="text-align: right;">1,606.96 s</td>
+</tr>
+</tbody>
+</table>
+<p>The test L2 is higher than the training L2 by 0.0450, so the run is still diagnosed as underfit. The PDE residual is low, but field accuracy does not exceed the legacy data-driven prototype.</p>
+<h3 id="52-descriptive-comparison-with-legacy-v11">5.2 Descriptive comparison with legacy v11</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align: right;">Legacy v11</th>
+<th style="text-align: right;">Current XL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parameters</td>
+<td style="text-align: right;">341,026</td>
+<td style="text-align: right;">874,209</td>
+</tr>
+<tr>
+<td>Test relative L2</td>
+<td style="text-align: right;">0.115319</td>
+<td style="text-align: right;">0.246087</td>
+</tr>
+<tr>
+<td>Test PDE RMS</td>
+<td style="text-align: right;">1.038709</td>
+<td style="text-align: right;">0.001059</td>
+</tr>
+</tbody>
+</table>
+<p>PDE residual decreases by about 99.9%, while test L2 increases by about 113%. The data and architecture differ, so the comparison does not isolate the effect of model scale.</p>
+<p><img alt="Figure 3. Accuracy and PDE-residual tradeoff" src="publication/assets/xl_result_tradeoff_en.png"></p>
+<p>Figure 3. Descriptive comparison between legacy v11 and current XL. The two runs are not a matched ablation.</p>
+<h3 id="53-training-behavior">5.3 Training behavior</h3>
+<p><img alt="Figure 4. Development convergence of the XL model" src="publication/assets/xl_training_curves_en.png"></p>
+<p>Figure 4. Development L2 and PDE RMS for the seed-42 XL run. Curves use the saved 500-step history.</p>
+<p>Development L2 decreases quickly and then enters a low-change regime after about 10,000 steps. PDE residual fluctuates during training, so checkpoint selection remains sensitive to the physical diagnostic.</p>
+<h3 id="54-test-prediction">5.4 Test prediction</h3>
+<p><img alt="Figure 5. Representative XL test prediction" src="experiments/v_aug3x_xl_d128_l4/test_prediction.png"></p>
+<p>Figure 5. Representative test prediction from the seed-42 XL run.</p>
+<h3 id="55-preliminary-physics-weight-and-dropout-sensitivity">5.5 Preliminary physics-weight and dropout sensitivity</h3>
+<p>A second saved run increases physics weight from 0.1 to 0.15 and decreases dropout from 0.1 to 0.08:</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th style="text-align: right;">Test L2</th>
+<th style="text-align: right;">Test PDE RMS</th>
+<th style="text-align: right;">Best step</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>physics=0.10, dropout=0.10</td>
+<td style="text-align: right;">0.246087</td>
+<td style="text-align: right;">0.001059</td>
+<td style="text-align: right;">22,000</td>
+</tr>
+<tr>
+<td>physics=0.15, dropout=0.08</td>
+<td style="text-align: right;">0.223471</td>
+<td style="text-align: right;">0.001062</td>
+<td style="text-align: right;">22,500</td>
+</tr>
+</tbody>
+</table>
+<p>The second configuration reduces test L2 by about 9.2% and changes PDE RMS by only about 0.3%. Because two hyperparameters change together and each configuration has one run, this is a hypothesis rather than an isolated ablation.</p>
+<p><img alt="Figure 6. Physics-weight and dropout sensitivity" src="publication/assets/xl_physics_sensitivity_en.png"></p>
+<p>Figure 6. Two saved XL configurations. The comparison changes both physics weight and dropout.</p>
+<h3 id="56-difference-from-the-legacy-architecture">5.6 Difference from the legacy architecture</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th style="text-align: right;">Legacy d64 prototype</th>
+<th style="text-align: right;">Current XL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model width</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">128</td>
+</tr>
+<tr>
+<td>Transformer layers</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td>Parameters</td>
+<td style="text-align: right;">336,546 or 341,026</td>
+<td style="text-align: right;">874,209</td>
+</tr>
+<tr>
+<td>Latent ODE</td>
+<td style="text-align: right;">enabled</td>
+<td style="text-align: right;">disabled</td>
+</tr>
+<tr>
+<td>Manifold CNN branch</td>
+<td style="text-align: right;">enabled</td>
+<td style="text-align: right;">disabled</td>
+</tr>
+<tr>
+<td>Input high-pass branch</td>
+<td style="text-align: right;">enabled</td>
+<td style="text-align: right;">disabled</td>
+</tr>
+<tr>
+<td>Sensors</td>
+<td style="text-align: right;">0 or exploratory 8</td>
+<td style="text-align: right;">fixed 8</td>
+</tr>
+<tr>
+<td>Main data</td>
+<td style="text-align: right;"><code>burgers_custom_v1</code></td>
+<td style="text-align: right;"><code>burgers_augmented_v1</code></td>
+</tr>
+<tr>
+<td>Physics weight</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.1</td>
+</tr>
+</tbody>
+</table>
+<p>Legacy information is retained only as historical context, not as the current method.</p>
+<h2 id="6-reproducibility-and-evidence-boundaries">6 Reproducibility and Evidence Boundaries</h2>
+<p>The main reproduction entry is</p>
+<div class="codehilite"><pre><span></span><code><span class="n">python</span> <span class="n">code</span><span class="p">\</span><span class="n">demo_burgers_dataset</span><span class="p">.</span><span class="n">py</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-data-dir</span> <span class="n">datasets</span><span class="p">\</span><span class="n">burgers_augmented_v1</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-train</span><span class="o">-file</span> <span class="n">burgers_augmented_train</span><span class="p">.</span><span class="n">npz</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-dev</span><span class="o">-file</span> <span class="n">burgers_augmented_dev</span><span class="p">.</span><span class="n">npz</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-test</span><span class="o">-file</span> <span class="n">burgers_augmented_test</span><span class="p">.</span><span class="n">npz</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-train-samples</span> <span class="n">2956</span> <span class="p">-</span><span class="n">-dev-samples</span> <span class="n">633</span> <span class="p">-</span><span class="n">-test-samples</span> <span class="n">635</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-eval-samples</span> <span class="n">32</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-preset</span> <span class="n">wide</span> <span class="p">-</span><span class="n">-d-model</span> <span class="n">128</span> <span class="p">-</span><span class="n">-n-layers</span> <span class="n">4</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-sensor-count</span> <span class="n">8</span> <span class="p">-</span><span class="n">-sensor-time</span> <span class="n">0</span><span class="p">.</span><span class="n">5</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-steps</span> <span class="n">24000</span> <span class="p">-</span><span class="n">-lr-decay-steps</span> <span class="n">12000</span> <span class="p">-</span><span class="n">-batch-size</span> <span class="n">32</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-lr</span> <span class="n">0</span><span class="p">.</span><span class="n">001</span> <span class="p">-</span><span class="n">-warmup-steps</span> <span class="n">0</span> <span class="p">-</span><span class="n">-dropout</span> <span class="n">0</span><span class="p">.</span><span class="n">1</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-optimizer</span> <span class="n">adamw</span> <span class="p">-</span><span class="n">-weight-decay</span> <span class="n">0</span><span class="p">.</span><span class="n">0001</span> <span class="p">-</span><span class="n">-manifold-weight-decay</span> <span class="n">0</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-physics-weight</span> <span class="n">0</span><span class="p">.</span><span class="n">1</span> <span class="p">-</span><span class="n">-validation-physics-weight</span> <span class="n">0</span><span class="p">.</span><span class="n">1</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-loss-balance</span> <span class="p">-</span><span class="n">-manifold-steps</span> <span class="n">500</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-eval-every</span> <span class="n">500</span> <span class="p">-</span><span class="n">-early-stop-patience</span> <span class="n">4</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-early-stop-min-fraction</span> <span class="n">0</span><span class="p">.</span><span class="n">75</span> <span class="p">-</span><span class="n">-seed</span> <span class="n">42</span> <span class="p">-</span><span class="n">-save-model</span> <span class="p">`</span>
+  <span class="p">-</span><span class="n">-output-dir</span> <span class="n">experiments</span><span class="p">\</span><span class="n">v_aug3x_xl_d128_l4</span>
+</code></pre></div>
+
+<p>Evidence boundaries:</p>
+<ol>
+<li>The main result uses one seed.</li>
+<li>Metrics use 32 evaluated trajectories, not all 635.</li>
+<li>The mixed augmentation includes non-exact physical transforms.</li>
+<li>The legacy comparison changes data and architecture.</li>
+<li>The physics/dropout sensitivity changes two factors at once.</li>
+<li>Matched 64/128-width and 3/4-layer ablations are still missing.</li>
+</ol>
+<h2 id="7-conclusion">7 Conclusion</h2>
+<p>The current model should be described as a 128-wide, four-layer multimodal neural operator with 874,209 parameters. In the saved seed-42 run it reaches a test relative L2 of 0.2461 and a PDE RMS of 0.001059, revealing a tradeoff between field accuracy and physical residual. The 64-wide, three-layer model is only a historical reference and must not be presented as the current architecture.</p>
+<p>The evidence supports stable training and a large PDE-residual reduction. It does not support a claim that the current model dominates the legacy baseline on every metric or that width alone caused the change. The next priority is a matched width and depth ablation under identical data, evaluation samples, and optimization budget.</p>
+<h2 id="data-and-code-availability">Data and Code Availability</h2>
+<ul>
+<li>Main training entry: <code>code/demo_burgers_dataset.py</code></li>
+<li>Current data: <code>datasets/burgers_augmented_v1/</code></li>
+<li>Main run: <code>experiments/v_aug3x_xl_d128_l4/</code></li>
+<li>Sensitivity run: <code>experiments/v_aug3x_xl_physics15/</code></li>
+<li>Current metrics: <code>experiments/v_aug3x_xl_d128_l4/metrics.json</code></li>
+</ul>
+<h2 id="references">References</h2>
+<p>[1] Z. Li, N. Kovachki, K. Azizzadenesheli, B. Liu, K. Bhattacharya, A. Stuart, and A. Anandkumar. Fourier Neural Operator for Parametric Partial Differential Equations. International Conference on Learning Representations, 2021.</p>
+<p>[2] L. Lu, P. Jin, G. Pang, Z. Zhang, and G. E. Karniadakis. Learning Nonlinear Operators via DeepONet Based on the Universal Approximation Theorem of Operators. Nature Machine Intelligence, 3:218-229, 2021.</p>
+<p>[3] N. Kovachki, Z. Li, B. Liu, K. Azizzadenesheli, K. Bhattacharya, A. Stuart, and A. Anandkumar. Neural Operator: Learning Maps Between Function Spaces with Applications to PDEs. Journal of Machine Learning Research, 24(89):1-97, 2023.</p>
+<p>[4] M. Takamoto, T. Praditia, R. Leiteritz, D. MacKinlay, F. Alesiani, D. Pfluger, and M. Niepert. PDEBench: An Extensive Benchmark for Scientific Machine Learning. NeurIPS Datasets and Benchmarks Track, 2022.</p>
+<p>[5] M. Raissi, P. Perdikaris, and G. E. Karniadakis. Physics-Informed Neural Networks: A Deep Learning Framework for Solving Forward and Inverse Problems Involving Nonlinear Partial Differential Equations. Journal of Computational Physics, 378:686-707, 2019.</p>
+<p>[6] S. Wang, H. Wang, and P. Perdikaris. Learning the Solution Operator of Parametric Partial Differential Equations with Physics-Informed DeepONets. Science Advances, 7(40):eabi8605, 2021.</p>
+<p>[7] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, L. Kaiser, and I. Polosukhin. Attention Is All You Need. Advances in Neural Information Processing Systems, 2017.</p>
+<p>[8] A. Baltrušaitis, C. Ahuja, and L.-P. Morency. Multimodal Machine Learning: A Survey and Taxonomy. IEEE Transactions on Pattern Analysis and Machine Intelligence, 41(2):423-443, 2019.</p>
+<p>[9] A. Krishnapriyan, A. Gholami, S. Zhe, R. Kirby, and M. W. Mahoney. Characterizing Possible Failure Modes in Physics-Informed Neural Networks. Advances in Neural Information Processing Systems, 2021.</p>
+<p>[10] J. Pineau, P. Vincent-Lamarre, K. Sinha, V. Lariviere, A. Beygelzimer, F. d'Alche-Buc, E. Fox, and H. Larochelle. Improving Reproducibility in Machine Learning Research. Journal of Machine Learning Research, 22(164):1-20, 2021.</p></main>
+</body>
+</html>
