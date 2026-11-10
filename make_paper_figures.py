@@ -121,9 +121,9 @@ def fig2_performance():
     pb_id_gaps     = [4.8, -3.9]
 
     # PB_OOD 全量对比（包含d96变体占位，训练完后更新）
-    pb_ood_configs = ['基线\nd64,l3', 'd80,l3\ndo=0.15', 'pw=0.12\nd64', 'pw=0.18\nd64', 'seed42\nd64']
-    pb_ood_test_l2 = [0.3363,  0.3166,   0.4579,   0.4722,   0.3288]
-    pb_ood_gaps    = [23.6,    50.2,     17.2,     14.2,     35.1]
+    pb_ood_configs = ['基线\nd64,l3', 'd80,l3\ndo=0.15', 'pw=0.12\nd64', 'pw=0.18\nd64', 'seed42\nd64', 'd96,l4\nseed42']
+    pb_ood_test_l2 = [0.3363,  0.3166,   0.4579,   0.4722,   0.3288,   0.3026]
+    pb_ood_gaps    = [23.6,    50.2,     17.2,     14.2,     35.1,     83.3]
 
     # 物理权重扫描
     pw_vals   = [0.05, 0.08, 0.12, 0.18, 0.30]
@@ -177,7 +177,7 @@ def fig2_performance():
 
     # ── 子图4: PB_OOD 多策略对比 ──
     ax4 = fig.add_subplot(gs[1, 0])
-    bar_colors = [C['base'], '#E67E22', C['blue'], C['purple'], C['good']]
+    bar_colors = [C['base'], '#E67E22', C['blue'], C['purple'], C['good'], '#8E44AD']
     bars = ax4.bar(pb_ood_configs, pb_ood_test_l2, color=bar_colors, alpha=0.85, edgecolor='k', lw=1.5)
     ax4.axhline(0.3363, color=C['base'], lw=1.5, ls='--', alpha=0.7, label='基线')
     for b, v in zip(bars, pb_ood_test_l2):
@@ -238,7 +238,7 @@ def fig3_ablation():
     # Test L2 值（NaN = 未测试）
     data = np.array([
         [0.2199, 0.1663, 0.1858],   # PB_ID
-        [0.3363, np.nan, 0.3644],   # PB_OOD
+        [0.3363, 0.3026, 0.3644],   # PB_OOD  ← d96已补全
         [0.2138, 0.2491, 0.2408],   # PDEBench
     ])
     masked = np.ma.masked_invalid(data)
