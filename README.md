@@ -36,17 +36,21 @@ L2 均为相对 L2 误差（越小越好）。
 
 分布外的误差约为分布内的 3 倍，这是目前的主要问题。
 
-**PDEBench（`pdebench_burgers`，自带独立 dev 集）**
+**PDEBench（`pdebench_burgers`，自带独立 dev 集）与 FNO 对比**
 
-| 实验 | 配置 | seed | Test L2（前 32 个） | Test PDE RMS |
-|---|---|---|---|---|
-| `custom_v14_multi_dataset_pdebench_24k` | d64, l3, dropout 0.05 | 2024 | **0.2138** | 0.665 |
-| `custom_v14_improved_d128_l4_pdebench_improved` | d128, l4, dropout 0.05 | 2024 | 0.2408 | 0.802 |
-| `custom_v14_pdebench_adaptive` | d64, l3, 无权重衰减 | 2024 | 0.2475 | 2.645 |
-| `custom_v14_refined_pdebench_refined` | d64, l3, dropout 0.08 | 2024 | 0.2565 | 1.062 |
-| `custom_v14_multi_dataset_pdebench_12k` | d64, l3, 只训练 12k 步 | 11 | 0.2687 | 0.320 |
+最好的配置是 `lowdata/opt5_n512_drop10_steps24k`（d64, l3, dropout 0.1, conv 流形自编码器, manifold-cnn, latent ODE, 训练时不加 physics loss, 24k 步, 336K 参数），用 `code/demo_burgers_resnet.py` 训练。
 
-PDEBench 上加大模型（d128）或加强正则化（dropout 0.08）都没有比 d64/l3 好。这些运行没有保存模型，只有前 32 个 test 样本的结果。
+| 训练样本数 | FNO（87K 参数） | 混合 PINN | 混合 PINN 低多少 |
+|---|---|---|---|
+| 32 | 0.577 | 0.501 | 13% |
+| 64 | 0.479 | 0.388 | 19% |
+| 128 | 0.344 | 0.272 | 21% |
+| 256 | 0.230 | 0.177 ± 0.001（3 个 seed） | 23% |
+| 512 | 0.150（24k 步） | **0.130 ± 0.009**（8 个 seed） | 13% |
+
+512 样本的 seed 7 模型在和 FNO 相同的前 128 个 test 样本上是 0.1167（`eval_pdebench_vs_fno.py`），与只评估前 32 个时的 0.1162 几乎一样。FNO 每档只有 1 个 seed，256 及以下只训练了 12k 步。更多样本（1024、2375）的对比正在跑。
+
+`custom_v14_multi_dataset_pdebench_24k`（0.2138）等 v14 系列配置在 PDEBench 上明显更差，不是这个数据集上的最好结果。
 
 **PB_ID（`burgers_custom_pb_id`）**
 
