@@ -1,329 +1,109 @@
 # 多模态神经算子 (Multimodal Neural Operators)
 
-## 概述
-
-本项目实现了一个**物理信息神经网络（PINN）与神经算子混合架构**，通过创新性地结合交叉注意力机制、动态物理权重调整和数据增强策略，在求解Burgers方程中实现了**99.9% PDE残差改善**（从1.0387降至0.001059）。
-
-### 🎯 核心创新
-
-- **混合架构设计**：整合神经算子、Transformer、物理约束和数据驱动学习
-- **交叉注意力机制**：动态调整物理约束权重，优化数据与物理的平衡
-- **智能数据增强**：通过质量优先策略实现3倍样本增强（1.4k→4.2k）
-- **充分消融验证**：完整的实验证明各组件的必要性
-
----
-
-## 📊 关键性能指标
-
-| 方法 | PDE RMS | Test L2 | 参数数 | 改善幅度 |
-|------|---------|---------|--------|---------|
-| **基线** (ResNet v11) | 1.0387 | 0.1153 | - | - |
-| **混合PINN** (本方案) | **0.001059** | **0.2461** | 874k | **↓99.9%** |
-| **改善倍数** | **980×** | - | - | **质的飞跃** |
-
----
-
-## 🏗️ 项目架构
-
-### 目录结构
+用混合 PINN（物理信息神经网络 + 神经算子）学习一维 Burgers 方程的解算子：输入初值 u0(x)，输出整个时空场 u(x, t)。
 
 ```
-pinn_hybrid_demo/
-├── code/                           # 核心代码
-│   ├── shm_multiclass_transformer.py    # 主模型（交叉注意力）
-│   ├── baselines_1d_burgers.py         # 基线实现
-│   ├── train_baseline_resnet.py        # ResNet基线训练
-│   ├── train_fno_baseline.py           # FNO基线训练
-│   ├── burgers_solver.py               # PDE求解器
-│   ├── demo_burgers_dataset.py         # 数据集生成与增强
-│   ├── fno_teacher.py                  # FNO教师模型
-│   ├── analyze_burgers_run.py          # 实验分析工具
-│   ├── TECHNICAL_REPORT.md             # 技术细节文档
-│   └── requirements.txt                # 依赖列表
-│
-├── 文档（论文级别）
-│   ├── PAPER_READY_DATA.md            # 论文核心数据与结果
-│   ├── FINAL_PROJECT_SUMMARY.md       # 项目完整总结
-│   ├── EXPERIMENTS_CHECKPOINTS.md     # 实验检查点与里程碑
-│   └── 📊_可视化图表使用指南.md        # 可视化数据说明
-│
-├── .gitignore                      # Git忽略规则
-└── README.md                       # 本文件
+∂u/∂t + u·∂u/∂x = ν·∂²u/∂x²,   ν = 0.01,   网格 256 (x) × 101 (t)
 ```
 
----
+## 模型
 
-## 🔧 环境配置
+主模型是 [code/demo_burgers_dataset.py](code/demo_burgers_dataset.py) 中的 `BurgersHybridPINN`：
 
-### 系统要求
-- Python 3.8+
-- CUDA 11.0+ (推荐GPU加速)
-- 内存 8GB+
+- **编码**：流形自编码器（先单独预训练）+ CNN tokenizer，把 u0 压成 latent 和一组 context token
+- **时间演化**：latent ODE（`--latent-ode --temporal ode`）
+- **解码**：查询点 (x, t) 经 Fourier 特征后与 context 做交叉注意力，再经 FFN 输出 u(x, t)
+- **损失**：数据 MSE + 初值 + 边界 + PDE 残差（自动微分），各项由 loss balancer 自动缩放
+- **正则化与优化**：dropout、AdamW 权重衰减、梯度裁剪、warmup + 余弦退火、按 dev 集早停
 
-### 安装步骤
+## 主要结果
+
+L2 均为相对 L2 误差（越小越好）。
+
+**分布内（`burgers_custom_v1`，独立 dev/test）**
+
+| 实验 | 参数量 | Test L2 | Test PDE RMS |
+|---|---|---|---|
+| `custom_v14_shift3_drop005_24k`（d64, l3, dropout 0.05） | 336K | **0.0873** | 0.856 |
+
+**分布外（`burgers_custom_pb_ood`，2026-11-11 修正划分后）**
+
+| 实验 | Test L2（前 32 个） | Test L2（全部 128 个） | 说明 |
+|---|---|---|---|
+| d64, l3 | 0.3438 | — | 353K 参数 |
+| d96, l4 | 0.2717 ~ 0.2776 | 0.2956 | 同配置两次运行 |
+| d96, l4 + 流态加权采样 | 0.2746 | 0.2986 | 没有改善 |
+
+分布外的误差约为分布内的 3 倍，这是目前的主要问题。
+
+## 2026-11-11 的修正和结论
+
+- **dev/test 划分修正**：PB_ID 和 PB_OOD 原来用 test 文件同时当 dev，checkpoint 是在 test 上挑的，之前这两个数据集的结果都偏乐观，已作废。现在从训练集切出独立 dev（train/dev/test = 851/173/128），三份之间没有重复样本，训练脚本也会拒绝 dev 与 test 相同的配置。
+- **容量**：在干净划分下，d96/l4 的 L2 比 d64/l3 低约 19%，但过拟合更明显（gap 70% 对 41%）。
+- **随机森林（u0 → 场的 PCA 系数）**：Test L2 0.70，比网络差很多，预剪枝也几乎没有改善过拟合。
+- **LDA + K-means**：在 u0 上，LDA 方向比 PCA 更能区分输出场流态（ARI 0.825 对 0.262）；分布外 test 在 LDA 空间到最近簇中心的距离是 train 的 2.44 倍。但按流态加权采样没有降低 L2，多 seed 验证仍在进行中。
+
+## 已知限制
+
+- 训练脚本默认 `eval_samples=32`，打印出的 L2 只用了每个划分的前 32 个样本；完整评估请用 `nn_predict_cache.py`。
+- `--preset wide` 只读取 512 个训练样本，没有用满 851 个。
+- 同一配置重跑，Test L2 波动约 0.006，PDE RMS 波动可达一倍，单次结果的小差异不可靠。
+- 有限差分算的 PDE 残差在激波处很大（真值场自身约 5.5），不能拿来和模型自动微分的 PDE RMS 比较。
+
+## 安装
 
 ```bash
-# 1. 克隆仓库
 git clone https://github.com/zhengjiawei-abc/multimodal-neural-operators.git
 cd multimodal-neural-operators
-
-# 2. 进入代码目录
-cd code
-
-# 3. 安装依赖
-pip install -r requirements.txt
-
-# 4. 验证环装
-python -c "import torch; print(torch.__version__)"
+pip install -r code/requirements.txt
+pip install torch scikit-learn   # PyTorch 请按自己的 CUDA 版本安装
 ```
 
----
+数据集文件（`datasets/` 下的 parquet/npz）和模型权重没有放进仓库，需要自行准备。
 
-## 📚 模型说明
+## 运行
 
-### 混合PINN架构
-
-```
-输入 (x, t) 
-  ↓
-[神经算子 + 交叉注意力]
-  ├─ 多模态特征提取
-  ├─ 注意力权重生成（物理+数据平衡）
-  └─ 动态约束调整
-  ↓
-[物理约束求解]
-  ├─ 自动微分计算 PDE 残差
-  └─ 加权损失融合
-  ↓
-输出 u(x,t) 预测值
-```
-
-### 关键特性
-
-1. **交叉注意力权重**
-   - 动态调整物理约束权重 λ(x,t)
-   - 根据数据置信度自适应调整
-   - 避免物理过度约束
-
-2. **数据增强策略**
-   - 时间序列插值（3倍样本）
-   - 空间扰动增强
-   - 保持PDE一致性
-
-3. **损失函数设计**
-   ```
-   L_total = L_data + λ(x,t) × L_pde + L_reg
-   
-   其中：
-   - L_data: MSE(预测值, 真实值)
-   - L_pde: PDE残差 (∂u/∂t + u∂u/∂x - ν∂²u/∂x²)²
-   - L_reg: 正则项 (Dropout)
-   - λ: 交叉注意力学习的权重
-   ```
-
----
-
-## 🚀 快速开始
-
-### 1. 运行基线（ResNet）
+所有命令都在仓库根目录执行。
 
 ```bash
-cd code
-python train_baseline_resnet.py \
-  --experiment-name baseline_v11 \
-  --train-file burgers_augmented_train.npz \
-  --dev-file burgers_augmented_dev.npz \
-  --test-file burgers_augmented_test.npz \
-  --preset balanced \
-  --steps 12000
+# 1. 为 PB_ID / PB_OOD 生成独立的 dev 划分（只需一次）
+python datasets_make_dev_split.py
+
+# 2. 训练（示例：PB_OOD 上的 d96/l4，并保存模型）
+python code/demo_burgers_dataset.py --preset wide \
+  --data-dir datasets/burgers_custom_pb_ood \
+  --train-file burgers_nu0.01_train_split.parquet \
+  --dev-file burgers_nu0.01_dev_split.parquet \
+  --test-file burgers_nu0.01_test.parquet \
+  --d-model 96 --n-layers 4 --dropout 0.05 --physics-weight 0.05 \
+  --latent-ode --temporal ode --cross-attention --input-highpass \
+  --manifold-cnn --query-local-features \
+  --steps 24000 --seed 123 --save-model \
+  --output-dir experiments/outputs_burgers_dataset/my_run
+
+# 3. 用保存的模型在全部样本上评估
+python nn_predict_cache.py experiments/outputs_burgers_dataset/my_run/model.pt
 ```
 
-### 2. 运行混合PINN模型
+加 `--quick` 可以只跑 60 步，用来检查环境。`--sample-weights path.npy` 可以按样本权重采样训练数据。
 
-```bash
-python train_hybrid_pinn.py \
-  --experiment-name v_augmented_3x \
-  --train-file burgers_augmented_train.npz \
-  --dev-file burgers_augmented_dev.npz \
-  --test-file burgers_augmented_test.npz \
-  --preset wide \
-  --d-model 128 \
-  --n-layers 4 \
-  --physics-weight 0.1 \
-  --dropout 0.1 \
-  --steps 24000
-```
+## 目录
 
-### 3. 分析实验结果
+| 路径 | 内容 |
+|---|---|
+| `code/demo_burgers_dataset.py` | 主模型、训练和评估 |
+| `code/baselines_1d_burgers.py`、`code/train_fno_baseline.py` | FNO、DeepONet 等基线 |
+| `code/burgers_solver.py` | Burgers 参考求解器 |
+| `datasets_make_dev_split.py` | 生成独立 dev 划分并查重 |
+| `pb_ood_clean_split_runs.py` | 干净划分下 d64 对 d96 的对照实验 |
+| `lda_kmeans.py`、`make_regime_weights.py` | LDA + K-means 流态分析与采样权重 |
+| `compare_regime_weighted.py`、`compare_regime_seeds.py` | 基线与加权模型的对比（单 seed / 多 seed） |
+| `rf_common.py`、`rf_standalone.py` | 随机森林基线 |
+| `experiments/` | 各实验的 `metrics.json` 和图（只提交了小文件） |
+| `publication/` | 论文草稿和图 |
 
-```bash
-python analyze_burgers_run.py \
-  --run-dir experiments/v_augmented_3x \
-  --save-plots results/
-```
+## 联系
 
----
+zhengjiawei-abc · 1103493759@qq.com
 
-## 📈 实验结果详解
-
-### 阶段1：基线验证
-- **配置**：ResNet v11, 1.4k样本，无增强
-- **结果**：PDE RMS = 1.0387（基准）
-- **用途**：性能对标参考
-
-### 阶段2：数据增强探索
-- **最优配置**：4.2k样本（3倍增强），Dropout=0.10
-- **性能**：
-  - PDE RMS: **0.0048** (↓99.5%)
-  - Test L2: 0.2749
-  - 参数数: 102k
-  
-### 阶段3：进一步微调
-- **扩展配置**：36,000训练步，宽网络
-- **最终性能**：
-  - PDE RMS: **0.001059** (↓99.9%)
-  - Test L2: 0.2461
-  - 参数数: 874k
-  - **推荐用于论文发表**
-
----
-
-## 🧪 消融实验
-
-| 移除组件 | PDE恶化 | 重要性 |
-|---------|--------|--------|
-| 物理约束 | >10,000% | 🔴 **关键** |
-| 交叉注意力 | +66-150% | 🟠 **重要** |
-| 数据增强 | +60% (L2) | 🟠 **重要** |
-| Dropout正则 | +27-82% | 🟡 **中等** |
-
-**结论**：所有核心组件都对性能至关重要。
-
----
-
-## 📖 文档导航
-
-- **[PAPER_READY_DATA.md](PAPER_READY_DATA.md)** - 论文核心数据与推导
-- **[FINAL_PROJECT_SUMMARY.md](FINAL_PROJECT_SUMMARY.md)** - 完整项目总结与路线图
-- **[EXPERIMENTS_CHECKPOINTS.md](EXPERIMENTS_CHECKPOINTS.md)** - 详细的检查点与里程碑
-- **[📊_可视化图表使用指南.md](📊_可视化图表使用指南.md)** - 可视化分析工具说明
-- **[code/TECHNICAL_REPORT.md](code/TECHNICAL_REPORT.md)** - 技术深度分析
-
----
-
-## 💻 代码模块说明
-
-### `shm_multiclass_transformer.py` ⭐ (核心模型)
-实现混合PINN架构，包含：
-- Transformer编码器 + 交叉注意力
-- 物理约束计算（自动微分）
-- 动态权重调整机制
-
-### `baselines_1d_burgers.py`
-实现多种基线模型：
-- ResNet-based PINN
-- FNO (Fourier Neural Operator)
-- 纯数据驱动方案
-
-### `demo_burgers_dataset.py`
-数据处理管道：
-- PDE初值问题求解
-- 数据集生成与增强
-- 时间序列插值
-
-### `burgers_solver.py`
-Burgers方程的参考求解器：
-```
-∂u/∂t + u∂u/∂x = ν∂²u/∂x²
-初值：u(x,0) = -sin(πx)
-边界：周期性边界条件
-```
-
----
-
-## 📊 性能对标
-
-### 与其他PINN方法的比较
-
-| 方法 | PDE RMS | 网络复杂度 | 训练时间 |
-|------|---------|-----------|---------|
-| 标准PINN | 0.08-0.15 | 中等 | 快 |
-| **本方案** | **0.001059** | 低-中等 | 中等 |
-| FNO基线 | 0.02-0.05 | 低 | 最快 |
-| DeepONet | 0.03-0.08 | 高 | 慢 |
-
-**优势**：最优精度与计算效率的平衡
-
----
-
-## 🔍 关键发现
-
-1. **物理约束的重要性**
-   - 移除物理约束导致PDE RMS恶化>10,000%
-   - 混合方案通过交叉注意力优雅地平衡两者
-
-2. **数据增强的有效性**
-   - 3倍增强（保留多样性）最优
-   - 过度增强（>4倍）反而降低泛化性能
-
-3. **Dropout的作用**
-   - 最优Dropout=0.10
-   - 防止过拟合同时保持学习容量
-
-4. **交叉注意力的学习能力**
-   - 自动调整权重范围 [0, λ_max]
-   - 在不同区域/时间段学习不同的约束强度
-
----
-
-## 📚 引用与参考
-
-### 相关工作
-- Physics-Informed Neural Networks (PINNs) - Raissi et al. (2019)
-- Fourier Neural Operators (FNO) - Li et al. (2021)
-- Transformer-based PINNs - 最近的工作
-
-### PDE背景
-- Burgers方程是Navier-Stokes的简化
-- 在计算流体动力学中广泛应用
-- 是验证新算法的标准基准
-
----
-
-## 📋 项目统计
-
-```
-总实验数:        8+ 次
-总训练时间:      200+ 小时
-验证数据点:      635 个
-参数搜索空间:    ~200 个配置
-最终改善倍数:    980× (PDE RMS)
-可信度:          ⭐⭐⭐⭐⭐
-```
-
----
-
-## 🤝 贡献指南
-
-本项目接受问题报告和拉取请求。关于主要改进的讨论，请先开issue。
-
----
-
-## 📄 许可证
-
-MIT License - 详见 LICENSE 文件
-
----
-
-## ✉️ 联系方式
-
-- **作者**: zhengjiwei-abc
-- **邮箱**: 1103493759@qq.com
-- **GitHub**: https://github.com/zhengjiwei-abc
-
----
-
----
-
-**项目状态**: ✅ 完成且充分验证  
-**最后更新**: 2026-11-09
+最后更新：2026-11-11
