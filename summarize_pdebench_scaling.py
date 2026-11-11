@@ -57,12 +57,18 @@ def fmt(vals):
     return f"{st.mean(v):.4f} ± {st.stdev(v):.4f} (n={len(v)})" if len(v) > 1 else f"{v[0]:.4f} (n=1)"
 
 
-print(f"\n全部 {N_TEST} 个 test 样本的相对 L2")
-print(f"{'训练样本':>8} | {'FNO':>24} | {'混合 PINN':>24} | 混合低多少")
+from scipy.stats import ttest_ind  # noqa: E402
+
+print(f"\n全部 {N_TEST} 个 test 样本的相对 L2；p 值为 Welch t 检验（双侧）")
+print(f"{'训练样本':>8} | {'FNO':>24} | {'混合 PINN':>24} | {'混合低多少':>8} | p")
+tests = {}
 for n in (512, 1024, 2375):
-    f, h = results["fno"][n].values(), results["hybrid"][n].values()
+    f, h = list(results["fno"][n].values()), list(results["hybrid"][n].values())
     gap = f"{(1 - st.mean(h) / st.mean(f)) * 100:+.1f}%" if f and h else "—"
-    print(f"{n:>8} | {fmt(f):>24} | {fmt(h):>24} | {gap}")
+    p = float(ttest_ind(h, f, equal_var=False).pvalue) if len(f) > 1 and len(h) > 1 else float("nan")
+    tests[str(n)] = {"p_welch": p, "hybrid_minus_fno": st.mean(h) - st.mean(f) if f and h else None}
+    print(f"{n:>8} | {fmt(f):>24} | {fmt(h):>24} | {gap:>8} | {p:.3f}")
+results["welch"] = tests
 
 out = Path("experiments/pdebench_scaling_summary.json")
 out.write_text(json.dumps({k: {str(n): v for n, v in d.items()} for k, d in results.items()}, indent=2),

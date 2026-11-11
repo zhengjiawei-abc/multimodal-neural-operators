@@ -13,7 +13,7 @@ ROOT = Path("experiments/outputs_burgers_dataset/pdebench_scaling")
 N_TEST = 250
 
 FNO_SEEDS = (23, 7, 11)
-HYBRID_SEEDS = (7, 23)
+HYBRID_SEEDS = (7, 23, 11, 101)
 
 # 与 opt5_n512_drop10_steps24k 的 config 逐项对应（其余字段来自 --preset wide）
 HYBRID_ARGS = [
