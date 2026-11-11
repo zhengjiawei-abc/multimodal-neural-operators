@@ -25,12 +25,13 @@ RUNS = [
     ("pb_ood_clean_d96_l4", ["--d-model", "96", "--n-layers", "4"]),
 ]
 
-failed = []
-for name, extra in RUNS:
-    print(f"\n===== {name} =====", flush=True)
-    cmd = [sys.executable, "code/demo_burgers_dataset.py", *COMMON, *extra,
-           "--output-dir", f"experiments/outputs_burgers_dataset/{name}"]
-    if subprocess.run(cmd).returncode != 0:
-        failed.append(name)
-print("\nfailed:", failed or "none")
-sys.exit(1 if failed else 0)
+if __name__ == "__main__":
+    failed = []
+    for name, extra in RUNS:
+        print(f"\n===== {name} =====", flush=True)
+        cmd = [sys.executable, "code/demo_burgers_dataset.py", *COMMON, *extra,
+               "--output-dir", f"experiments/outputs_burgers_dataset/{name}"]
+        if subprocess.run(cmd).returncode != 0:
+            failed.append(name)
+    print("\nfailed:", failed or "none")
+    sys.exit(1 if failed else 0)
