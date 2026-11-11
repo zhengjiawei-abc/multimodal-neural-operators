@@ -1568,6 +1568,23 @@ def random_shift_batch(fields: torch.Tensor) -> torch.Tensor:
     return fields.gather(1, gather_index)
 
 
+# Optional per-sample sampling weights for the training split (--sample-weights).
+# Set once in main() after the training fields are loaded; None keeps the
+# original uniform sampling.
+TRAIN_SAMPLE_WEIGHTS: Optional[torch.Tensor] = None
+
+
+def draw_sample_indices(
+    fields: torch.Tensor,
+    cfg: DatasetConfig,
+    device: torch.device,
+) -> torch.Tensor:
+    weights = TRAIN_SAMPLE_WEIGHTS
+    if weights is not None and weights.numel() == fields.size(0):
+        return torch.multinomial(weights, cfg.batch_size, replacement=True)
+    return torch.randint(0, fields.size(0), (cfg.batch_size,), device=device)
+
+
 def sample_data_batch(
     fields: torch.Tensor,
     cfg: DatasetConfig,
@@ -1581,7 +1598,7 @@ def sample_data_batch(
     torch.Tensor,
     torch.Tensor,
 ]:
-    indices = torch.randint(0, fields.size(0), (cfg.batch_size,), device=device)
+    indices = draw_sample_indices(fields, cfg, device)
     batch_fields = fields[indices]
     if cfg.online_shift_augment:
         batch_fields = random_shift_batch(batch_fields)
@@ -1649,7 +1666,7 @@ def sample_physics_batch(
     device: torch.device,
     points_per_sample: int,
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-    indices = torch.randint(0, fields.size(0), (cfg.batch_size,), device=device)
+    indices = draw_sample_indices(fields, cfg, device)
     batch_fields = fields[indices]
     if cfg.online_shift_augment:
         batch_fields = random_shift_batch(batch_fields)
@@ -3302,6 +3319,13 @@ def main() -> None:
         default=None,
     )
     parser.add_argument("--save-model", action="store_true")
+    parser.add_argument(
+        "--sample-weights",
+        type=str,
+        default=None,
+        help=".npy of per-sample weights for the training file "
+        "(first train_samples rows are used); default is uniform",
+    )
     parser.add_argument("--cnn-channels", type=int, default=None)
     parser.add_argument("--cnn-kernel-size", type=int, default=None)
     parser.add_argument("--token-count", type=int, default=None)
@@ -3795,6 +3819,20 @@ def main() -> None:
         data_dir / cfg.test_file,
         cfg.test_samples,
     ).to(device)
+    if args.sample_weights is not None:
+        global TRAIN_SAMPLE_WEIGHTS
+        weights = np.load(args.sample_weights).astype(np.float32)
+        weights = weights[: train_fields.size(0)]
+        if weights.shape[0] != train_fields.size(0) or (weights < 0).any() or weights.sum() <= 0:
+            parser.error(
+                f"--sample-weights needs >= {train_fields.size(0)} non-negative "
+                f"weights with a positive sum, got shape {weights.shape}"
+            )
+        TRAIN_SAMPLE_WEIGHTS = torch.from_numpy(weights).to(device)
+        print(
+            f"sample weights: {args.sample_weights} "
+            f"(max/min = {weights.max() / max(weights.min(), 1e-12):.2f})"
+        )
     print(
         "shapes:",
         tuple(train_fields.shape),
