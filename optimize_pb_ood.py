@@ -11,8 +11,8 @@ OPTIMIZATION_CONFIGS = [
         "name": "pb_ood_optimize_v1_smaller_stronger",
         "desc": "方案A: 更小容量(d56) + 更强正则(dropout 0.25)",
         "data_dir": "datasets/burgers_custom_pb_ood",
-        "train_file": "burgers_nu0.01_train_000.parquet",
-        "dev_file": "burgers_nu0.01_test.parquet",
+        "train_file": "burgers_nu0.01_train_split.parquet",
+        "dev_file": "burgers_nu0.01_dev_split.parquet",
         "test_file": "burgers_nu0.01_test.parquet",
         "seed": 123,
         "d_model": 56,  # 从d80降低到d56 (-30%)
@@ -26,8 +26,8 @@ OPTIMIZATION_CONFIGS = [
         "name": "pb_ood_optimize_v2_baseline_extreme",
         "desc": "方案B: 保持d64 + 极强正则(dropout 0.30, l2)",
         "data_dir": "datasets/burgers_custom_pb_ood",
-        "train_file": "burgers_nu0.01_train_000.parquet",
-        "dev_file": "burgers_nu0.01_test.parquet",
+        "train_file": "burgers_nu0.01_train_split.parquet",
+        "dev_file": "burgers_nu0.01_dev_split.parquet",
         "test_file": "burgers_nu0.01_test.parquet",
         "seed": 123,
         "d_model": 64,  # 与基线相同
@@ -41,8 +41,8 @@ OPTIMIZATION_CONFIGS = [
         "name": "pb_ood_optimize_v3_minimal",
         "desc": "方案C: 极小容量(d48, l2) + 强正则",
         "data_dir": "datasets/burgers_custom_pb_ood",
-        "train_file": "burgers_nu0.01_train_000.parquet",
-        "dev_file": "burgers_nu0.01_test.parquet",
+        "train_file": "burgers_nu0.01_train_split.parquet",
+        "dev_file": "burgers_nu0.01_dev_split.parquet",
         "test_file": "burgers_nu0.01_test.parquet",
         "seed": 123,
         "d_model": 48,  # 极小容量

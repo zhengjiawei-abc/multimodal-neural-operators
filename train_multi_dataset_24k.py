@@ -39,8 +39,8 @@ DATASETS = [
     {
         "name": "pb_id",
         "data_dir": "datasets/burgers_custom_pb_id",
-        "train_file": "burgers_nu0.01_train_000.parquet",
-        "dev_file": "burgers_nu0.01_test.parquet",
+        "train_file": "burgers_nu0.01_train_split.parquet",
+        "dev_file": "burgers_nu0.01_dev_split.parquet",
         "test_file": "burgers_nu0.01_test.parquet",
         "desc": "参数内分布（In-Distribution）",
         "seed": 42,  # 不同于之前的seed=11
@@ -48,8 +48,8 @@ DATASETS = [
     {
         "name": "pb_ood",
         "data_dir": "datasets/burgers_custom_pb_ood",
-        "train_file": "burgers_nu0.01_train_000.parquet",
-        "dev_file": "burgers_nu0.01_test.parquet",
+        "train_file": "burgers_nu0.01_train_split.parquet",
+        "dev_file": "burgers_nu0.01_dev_split.parquet",
         "test_file": "burgers_nu0.01_test.parquet",
         "desc": "参数外分布（Out-of-Distribution）",
         "seed": 123,  # 不同种子

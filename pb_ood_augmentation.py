@@ -36,8 +36,8 @@ CONFIG = {
     "name": EXPERIMENT_NAME,
     "desc": "方向2: 参数空间数据增强 (online shift + 适度正则)",
     "data_dir": "datasets/burgers_custom_pb_ood",
-    "train_file": "burgers_nu0.01_train_000.parquet",
-    "dev_file": "burgers_nu0.01_test.parquet",
+    "train_file": "burgers_nu0.01_train_split.parquet",
+    "dev_file": "burgers_nu0.01_dev_split.parquet",
     "test_file": "burgers_nu0.01_test.parquet",
     "seed": 123,          # 与优化实验一致，便于对比
     # 基线容量 (不引入容量-正则矛盾)

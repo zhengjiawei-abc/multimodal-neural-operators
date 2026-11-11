@@ -8,7 +8,7 @@ cmd = [
     "--preset", "wide",
     "--data-dir",   "datasets/burgers_pb_ood_augmented",
     "--train-file", "train_augmented.npz",
-    "--dev-file",   "burgers_nu0.01_test.parquet",
+    "--dev-file",   "../burgers_custom_pb_ood/burgers_nu0.01_dev_split.parquet",
     "--test-file",  "burgers_nu0.01_test.parquet",
     "--output-dir", str(OUTPUT_DIR),
     "--seed", "123", "--d-model", "64", "--n-layers", "3",

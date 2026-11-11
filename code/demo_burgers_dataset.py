@@ -3761,6 +3761,23 @@ def main() -> None:
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     data_dir = Path(cfg.data_dir)
+    # The dev split drives checkpoint selection and early stopping; if it is
+    # the test file, the reported test metrics are selected on test data.
+    split_paths = {
+        name: (data_dir / file).resolve()
+        for name, file in (
+            ("train", cfg.train_file),
+            ("dev", cfg.dev_file),
+            ("test", cfg.test_file),
+        )
+    }
+    if split_paths["dev"] == split_paths["test"]:
+        parser.error(
+            f"--dev-file and --test-file point to the same file "
+            f"({split_paths['test']}); use a held-out dev split"
+        )
+    if split_paths["train"] in (split_paths["dev"], split_paths["test"]):
+        parser.error("--train-file must differ from --dev-file and --test-file")
 
     print(f"device: {device}")
     print(f"preset: {args.preset}")

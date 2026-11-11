@@ -14,8 +14,8 @@ DATASET_CONFIGS = [
     {
         "name": "pb_id_refined",
         "data_dir": "datasets/burgers_custom_pb_id",
-        "train_file": "burgers_nu0.01_train_000.parquet",
-        "dev_file": "burgers_nu0.01_test.parquet",
+        "train_file": "burgers_nu0.01_train_split.parquet",
+        "dev_file": "burgers_nu0.01_dev_split.parquet",
         "test_file": "burgers_nu0.01_test.parquet",
         "desc": "参数内分布（简单）",
         "seed": 42,
@@ -29,8 +29,8 @@ DATASET_CONFIGS = [
     {
         "name": "pb_ood_refined",
         "data_dir": "datasets/burgers_custom_pb_ood",
-        "train_file": "burgers_nu0.01_train_000.parquet",
-        "dev_file": "burgers_nu0.01_test.parquet",
+        "train_file": "burgers_nu0.01_train_split.parquet",
+        "dev_file": "burgers_nu0.01_dev_split.parquet",
         "test_file": "burgers_nu0.01_test.parquet",
         "desc": "参数外分布（困难）",
         "seed": 123,
