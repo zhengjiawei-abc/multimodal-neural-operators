@@ -47,8 +47,8 @@ def pde_rms(model, cfg, fields):
     return float(sq.mean().sqrt()), float(sq.median().sqrt())
 
 
-report = {}
-for name, path in RUNS.items():
+def evaluate_model(path):
+    """返回一个模型在全部 test 上的 L2、固定点 PDE 统计和各流态 L2。"""
     ckpt = torch.load(path, map_location=device, weights_only=False)
     cfg = nb.DatasetConfig(**ckpt["config"])
     model = nb.BurgersHybridPINN(cfg).to(device)
@@ -56,7 +56,8 @@ for name, path in RUNS.items():
     model.eval()
     pred = predict_fields(model, cfg, test, device)
     rms, med = pde_rms(model, cfg, test)
-    report[name] = {
+    torch.cuda.empty_cache()
+    return {
         "test_l2_all128": relative_l2(pred, test),
         "test_l2_first32": relative_l2(pred[:32], test[:32]),
         "pde_rms_4096pts": rms,
@@ -64,16 +65,21 @@ for name, path in RUNS.items():
         "per_regime_l2": {int(c): relative_l2(pred[test_regime == c], test[test_regime == c])
                           for c in np.unique(test_regime)},
     }
-    torch.cuda.empty_cache()
 
-counts = {int(c): int((test_regime == c).sum()) for c in np.unique(test_regime)}
-print(f"{'':20} {'L2(128)':>9} {'L2(前32)':>9} {'PDE RMS':>9} {'PDE 中位':>9}")
-for name, r in report.items():
-    print(f"{name:20} {r['test_l2_all128']:>9.4f} {r['test_l2_first32']:>9.4f} "
-          f"{r['pde_rms_4096pts']:>9.3f} {r['pde_median_abs_4096pts']:>9.3f}")
-print("\n各流态 L2（样本数）:")
-for c, n in counts.items():
-    b, w = report["baseline"]["per_regime_l2"][c], report["regime_weighted"]["per_regime_l2"][c]
-    print(f"  流态 {c} ({n:2}): {b:.4f} -> {w:.4f}  ({(w - b) / b * 100:+.1f}%)")
-Path("experiments/lda_kmeans_pb_ood/regime_weighted_comparison.json").write_text(
-    json.dumps({"counts": counts, "report": report}, indent=2), encoding="utf-8")
+
+if __name__ == "__main__":
+    report = {}
+    for name, path in RUNS.items():
+        report[name] = evaluate_model(path)
+
+    counts = {int(c): int((test_regime == c).sum()) for c in np.unique(test_regime)}
+    print(f"{'':20} {'L2(128)':>9} {'L2(前32)':>9} {'PDE RMS':>9} {'PDE 中位':>9}")
+    for name, r in report.items():
+        print(f"{name:20} {r['test_l2_all128']:>9.4f} {r['test_l2_first32']:>9.4f} "
+              f"{r['pde_rms_4096pts']:>9.3f} {r['pde_median_abs_4096pts']:>9.3f}")
+    print("\n各流态 L2（样本数）:")
+    for c, n in counts.items():
+        b, w = report["baseline"]["per_regime_l2"][c], report["regime_weighted"]["per_regime_l2"][c]
+        print(f"  流态 {c} ({n:2}): {b:.4f} -> {w:.4f}  ({(w - b) / b * 100:+.1f}%)")
+    Path("experiments/lda_kmeans_pb_ood/regime_weighted_comparison.json").write_text(
+        json.dumps({"counts": counts, "report": report}, indent=2), encoding="utf-8")
