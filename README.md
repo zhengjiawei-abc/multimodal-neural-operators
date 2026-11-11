@@ -36,6 +36,22 @@ L2 均为相对 L2 误差（越小越好）。
 
 分布外的误差约为分布内的 3 倍，这是目前的主要问题。
 
+**PDEBench（`pdebench_burgers`，自带独立 dev 集）**
+
+| 实验 | 配置 | seed | Test L2（前 32 个） | Test PDE RMS |
+|---|---|---|---|---|
+| `custom_v14_multi_dataset_pdebench_24k` | d64, l3, dropout 0.05 | 2024 | **0.2138** | 0.665 |
+| `custom_v14_improved_d128_l4_pdebench_improved` | d128, l4, dropout 0.05 | 2024 | 0.2408 | 0.802 |
+| `custom_v14_pdebench_adaptive` | d64, l3, 无权重衰减 | 2024 | 0.2475 | 2.645 |
+| `custom_v14_refined_pdebench_refined` | d64, l3, dropout 0.08 | 2024 | 0.2565 | 1.062 |
+| `custom_v14_multi_dataset_pdebench_12k` | d64, l3, 只训练 12k 步 | 11 | 0.2687 | 0.320 |
+
+PDEBench 上加大模型（d128）或加强正则化（dropout 0.08）都没有比 d64/l3 好。这些运行没有保存模型，只有前 32 个 test 样本的结果。
+
+**PB_ID（`burgers_custom_pb_id`）**
+
+之前 PB_ID 的结果（Test L2 0.160 ~ 0.245）都是把 test 当 dev 选出来的，已作废。干净划分下的 d64/l3 和 d96/l4 已排队重跑（`pb_id_clean_split_runs.py`），结果出来后补上。
+
 ## 2026-11-11 的修正和结论
 
 - **dev/test 划分修正**：PB_ID 和 PB_OOD 原来用 test 文件同时当 dev，checkpoint 是在 test 上挑的，之前这两个数据集的结果都偏乐观，已作废。现在从训练集切出独立 dev（train/dev/test = 851/173/128），三份之间没有重复样本，训练脚本也会拒绝 dev 与 test 相同的配置。
